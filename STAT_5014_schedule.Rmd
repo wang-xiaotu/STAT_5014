@@ -1,0 +1,48 @@
+---
+title: "Stat 5014 Schedule"
+author: "Bob Settlage"
+date: "Fall 2017"
+output:
+  pdf_document: null
+  fig_caption: yes
+  fig_height: 6
+  fig_width: 7
+  html_document: default
+  classoption: landscape
+header-includes: \setlength\parindent{24pt} \usepackage{MnSymbol} \usepackage{mathrsfs}
+---
+  
+  
+
+9:00-9:50 a.m.  Wednesday, SMYTH 232
+--------------  ---------------------------------------
+CRN:            87756
+Office:         3030 Torgersen
+Email:          rsettlag@vt.edu
+Office hours:   MF 9-10, location TBD
+Course Website: https://github.com/rsettlage/STAT_5014
+--------------  ---------------------------------------
+
+Tentative schedule:
+
+Lecture Date    Topic
+------- ------  ------------------------------------------------------------------ 
+1       30-Aug  Introductions, Reproducible Research, R, Rstudio, Rmarkdown, \LaTeX
+2	    6-Sep   Rprojects and Git, loading, munging and summarizing data
+3	    13-Sep  R functions and logic, good programming practices
+4*	    20-Sep  Projecting knowledge in plots, multipanel plots
+5	    27-Sep  R's apply family of functions
+6*	    4-Oct   Dual treatment of vector and matrix math in R, speed considerations
+7	    11-Oct  Parallel computing in R
+8	    18-Oct  Rnotebooks, bash/sed/awk, text mining
+9	    25-Oct  Python in Rnotebooks
+10	    1-Nov   Jupyter notebooks, R in Jupyter
+11*	    8-Nov   Interactive visualizations
+12	    15-Nov  No class
+-	    22-Nov  Thanksgiving Break
+13	    29-Nov  Big datasets, scripts, scheduler
+14	    6-Dec   Open
+15	    13-Dec  Open
+-       Final   None
+------- ------  ------------------------------------------------------------------
+
