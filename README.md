@@ -3,12 +3,12 @@ title: "Stat 5014"
 author: "Bob Settlage"
 date: "Fall 2017"
 output:
-  pdf_document: null
+  html_document: default
   fig_caption: yes
   fig_height: 6
   fig_width: 7
-  html_document: default
   classoption: landscape
+  pdf_document: null
 header-includes: \setlength\parindent{24pt} \usepackage{MnSymbol} \usepackage{mathrsfs}
 ---
   
