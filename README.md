@@ -1,7 +1,7 @@
 ---
 title: "Stat 5014"
 author: "Bob Settlage"
-date: "Fall 2017"
+date: "August 2017"
 output:
   html_document: default
   fig_caption: yes
