@@ -1,0 +1,162 @@
+---
+title: 'Introductions, Reproducible Research, and (a little) R'
+author: "Bob Settlage"
+date: '`r Sys.Date()`'
+output:
+  ioslides_presentation:
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 4
+    smaller: yes
+  slidy_presentation: default
+---
+
+## Today's Agenda
+
+- Introduce the course
+- Introduce the concepts of Reproducible Research
+- Introduce R as the (main) platform for the course
+- Homework 1
+
+## Course Learning Objectives
+
+* Reproducible research concepts
+* Good programming practices  
+* Data cleaning and munging
+* R programming
+* Git fundamentals
+* Markdown
+* Python basics
+
+## Tentative Course Lecture Schedule
+
+- 30-Aug  Introductions, Reproducible Research, R, Rstudio, Rmarkdown, $\LaTeX$
+- 6-Sep   Rprojects and Git, loading, munging and summarizing data
+- 13-Sep  R functions and logic, good programming practices
+- 20-Sep*  Projecting knowledge in plots, multipanel plots
+- 27-Sep  R's apply family of functions
+- 4-Oct*   Dual treatment of vector and matrix math in R, speed considerations
+- 11-Oct  Parallel computing in R
+- 18-Oct  Rnotebooks, bash/sed/awk, text mining
+- 25-Oct  Python in Rnotebooks
+- 1-Nov   Jupyter notebooks, R in Jupyter
+- 8-Nov   Interactive visualizations
+- 15-Nov  No class
+- 22-Nov  Thanksgiving Break
+- 29-Nov  Big datasets, scripts, scheduler
+- 6-Dec   Open
+- 13-Dec  Open
+
+## Reproducible Research | Setting the stage
+
+You have worked 6 months to analyze a data set.  You give your collaborator the perfect analysis and the results are very exciting.  They go away very happy and you don't hear from them for 1 year.  Suddenly, a flurry of emails ensues, they have new data to add to the previous pipeline, they need alterations to your perfect figure, they have lots of how did you questions, they ask you to write a methods section, etc etc.  You publish your perfect results.  Someone else analyzes the data and comes to *different* conclusions.  Are you sure you didn't have a bug in your code?  How good are your notes???
+
+## Reproducible Research | Concepts
+
+Guide to this topic here:  
+<http://ropensci.github.io/reproducibility-guide/>
+
+The general, we should **weave** code and text into a complete reference of our work.  The code should:
+
+- download (or otherwise load) data
+- reproduce steps to munge data
+- recreate analysis steps
+- create figures and tables
+- explain any and all steps along the way
+- end with conclusions drawn
+- optionally add suggestions for future experiments
+
+## Reproducible Research Analysis
+
+From Hadley Wickham & Garrett Grolemund's R for Data Science 
+<http://r4ds.had.co.nz>  
+![Tesla P100](data-science-pipeline.png)  
+
+## Reproducible Research Pipeline 
+
+Further illustrated by Peng and Eckel (2008)  
+```{r,out.width = "600px", echo=F}
+    knitr::include_graphics("Peng_Eckel_2008.png",auto_pdf=F)
+```
+
+## R and Rstudio
+
+From <http://r-project.org>  
+R is an integrated suite of software facilities for data manipulation, calculation and graphical display. 
+
+Rstudio is an IDE for R.  <http://rstudio.com>
+
+Reasons to use R:  
+
+* free  
+* open source  
+* large community of both users and developers  
+* large number of extensions to facilitate common tasks (packages)  
+* superb functionality for data processing
+* very mature statistical and graphical capabilities
+
+## R packages
+R packages are community written (and often tested) extensions to R to enhance the functionality of R.  
+
+Examples:  
+
+1. MASS  
+    + mvrnorm  
+    + stepAIC  
+2. ggplot2  
+    + grammer of graphics  
+3. knitr  
+    + RMarkdown  
+
+## Rmarkdown  
+
+RMarkdown:  "Analyze. Share. Reproduce."
+
+Seems like what we are looking for.  
+
+A Markdown-formatted document should be publishable as-is, as plain text, without looking like it’s been marked up with tags or formatting instructions.
+__John Gruber__
+
+Rstudio includes an "extended and slightly revised version" of Gruber's original Markdown syntax. This includes codes for many common text writing scenarios:
+
+1. adding lists  
+    + numbered, bullets, etc  
+2. text formatting  
+    + bold, italics, highlight, etc  
+3. adding equations  
+    + full $\LaTeX$ styled equations  
+    + numbering, indenting, aligning, etc  
+
+
+## $\LaTeX$  
+
+<http://latex-project.org>  
+$\LaTeX$ is a high-quality typesetting system; it includes features designed for the production of technical and scientific documentation. $\LaTeX$ is the de facto standard for the communication and publication of scientific documents. $\LaTeX$ is available as free software.
+
+Which includes many many math symbols:  
+<http://web.ift.uib.no/Teori/KURS/WRK/TeX/symALL.html>
+
+And has a cool online tool:  
+<http://detexify.kirelabs.org/classify.html>
+
+## Reproducible Research | Coding
+
+Combining $\LaTeX$ and Knitr, we have a system to weave text and code into a highly customizable and formatted analysis report.
+
+https://www.sharelatex.com/learn/Knitr
+
+## Quick tour of R and Rstudio
+1. panels
+    + interactive
+    + code
+    + help
+2. packages
+    + CRAN
+    + installing
+    + loading
+3. RMarkdown
+4. General R  
+    + basic math
+    + operator assignment  
+    
+## Homework 1
