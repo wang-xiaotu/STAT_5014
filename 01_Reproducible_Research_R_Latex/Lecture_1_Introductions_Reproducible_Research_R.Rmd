@@ -52,7 +52,7 @@ output:
 Q. How do you pass the course??  
 A. Do the homework AND participate.
 
-There will be ca. 14 homeworks, you need to pass 10.  Each homework will be given a P/F.  
+There will be ca. 14 homeworks, you need to pass 10.  Each homework will be given 10 points, 7 is passing.  
 
 Participation will be defined next class.
 
