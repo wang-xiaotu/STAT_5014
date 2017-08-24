@@ -60,7 +60,17 @@ Next to each item, comment on any challenges you see in performing the step.  If
 
 ## Problem 5
 
-We will be using GitHub in all future assignments.  To prepare for this, get a GitHub account.  Please include a link to your github page AND please email me your username.  
+We will be using GitHub in all future assignments.  To prepare for this, you need to do two things.
+
+### Part A
+Get a GitHub account.  This sometimes works best if your user name is the same as your local computer login user name.  
+
+### Part B
+Set up ssh keys. In R, go to Tools --> Global Options.  Click on the Git/SVN icon in the window that pops up.  If you havn't messed with SSH keys, go ahead and click generate RSA key.  Once done, click on view public key and then copy the key (everything in the window). 
+
+You now need to add this to your GitHub profile.  Click on the pulldown to view your profile and choose settings then SSH and GPG keys.  Click on New SSH key and paste you RSA public key there.
+
+Please include a link to your github page.  
 
 
 **This document containing solutions to Problems 3-5 should be typed in RMarkdown and Knit'd to create a pdf document turned in at the beginning of the next class.**
