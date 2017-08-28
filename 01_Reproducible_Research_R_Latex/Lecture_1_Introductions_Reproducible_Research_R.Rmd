@@ -52,9 +52,14 @@ output:
 Q. How do you pass the course??  
 A. Do the homework AND participate.
 
-There will be ca. 14 homeworks, you need to pass 10.  Each homework will be given 10 points, 7 is passing.  
+There will be ca. 14 homeworks, you need to pass 10.  Each homework will be given 10 points, 7 is passing.  Point breakdown  will be:
 
-Participation will be defined next class.
+- 2 pts for submitting  
+- 2 pts for clean, well written document  
+- 2 pts for complete description of analysis process  
+- 4 pts for completing the assigned tasks.  
+
+Participation will be defined in the next class and is all or nothing.
 
 ## Reproducible Research | Setting the stage
 
