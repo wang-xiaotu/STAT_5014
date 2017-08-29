@@ -79,7 +79,7 @@ Next to each item, comment on any challenges you see in performing the step.  If
 Please create and include a basic scatter plot and histogram of an internal R dataset.  To get a list of the datasets available use library(help="datasets").
 
 
-**This document containing solutions to Problems 3-5 should be typed in RMarkdown and Knit'd to create a pdf document turned in at the beginning of the next class.**
+**This document containing solutions to Problems 3-5 should be typed in RMarkdown, using proper English, and Knit'd to create a pdf document turned in at the beginning of the next class.**
 
 
 ## Optional preperation for next class:  
