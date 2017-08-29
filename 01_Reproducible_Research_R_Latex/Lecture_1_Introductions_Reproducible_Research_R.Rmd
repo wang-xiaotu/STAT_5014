@@ -172,5 +172,6 @@ https://www.sharelatex.com/learn/Knitr
 4. General R  
     + basic math
     + operator assignment  
+5. Basic plots
     
 ## Homework 1
