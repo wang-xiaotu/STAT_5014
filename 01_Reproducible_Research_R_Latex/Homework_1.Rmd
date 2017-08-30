@@ -21,7 +21,7 @@ Package         Source
 -------         --------------------------------
 Git:            https://git-scm.com/
 Github:         https://github.com (account) 
-Latex           https://miktex.org/
+Latex           https://www.latex-project.org/get/
 R:              https://cran.r-project.org/  
 Rstudio:        https://rstudio.com/  
 Python:         https://www.python.org/ 
@@ -61,8 +61,12 @@ swirl()
 # Problem 4
 
 Now that we have the R environment setup and have a basic understanding of R, let's add Markdown (choose File, New File, R Markdown, pdf).  
-a. In this new Rmarkdown file, please type a paragraph about what you are hoping to get out of this class.  Include at least 3 specific desired learning objectives in list format.  
-b. To this, add 3 density functions (Appendix Cassella & Berger) in centered format with equation number, i.e. format this as you would find in a journal.  
+
+### Part A
+In this new Rmarkdown file, please type a paragraph about what you are hoping to get out of this class.  Include at least 3 specific desired learning objectives in list format.  
+
+### Part B
+To this, add 3 density functions (Appendix Cassella & Berger) in centered format with equation number, i.e. format this as you would find in a journal.  
 
 # Problem 5
 
@@ -79,7 +83,7 @@ Next to each item, comment on any challenges you see in performing the step.  If
 Please create and include a basic scatter plot and histogram of an internal R dataset.  To get a list of the datasets available use library(help="datasets").
 
 
-**This document containing solutions to Problems 3-5 should be typed in RMarkdown, using proper English, and Knit'd to create a pdf document turned in at the beginning of the next class.**
+**This document containing solutions to Problems 2-6 should be typed in RMarkdown, using proper English, and Knit'd to create a pdf document turned in at the beginning of the next class.**
 
 
 ## Optional preperation for next class:  
