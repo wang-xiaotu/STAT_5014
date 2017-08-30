@@ -23,7 +23,7 @@ Course Website: https://github.com/rsettlage/STAT_5014
 --------------  ---------------------------------------
 
 ### Text book 
-There is no required text book for this course. The following resources will be helpful:  Google, your classmates, NLI (https://nli.tlos.vt.edu), LISA short courses.  
+There is no required text book for this course. The following resources will be helpful:  Google, your classmates, NLI (https://nli.tlos.vt.edu), SAIG short courses.  
 
 ### Required software (all free, install in order)
 
