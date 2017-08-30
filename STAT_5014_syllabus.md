@@ -57,7 +57,7 @@ This course endeavors to build competence in R and Python programming.  We will 
 \item R, Rmarkdown, Rprojects, Rnotebooks
 \item Git as a code repository
 \item Functions, conditional statements and loops in R
-\item Base graphics in R
+\item Base and grammer of graphics (ggplot2) in R
 \item Apply family of functions in R
 \item Matrix and vector math in R
 \item Bash/sed/awk
@@ -67,7 +67,7 @@ This course endeavors to build competence in R and Python programming.  We will 
 \item Scaling out compute
 \end{itemize}
 
-\noindent In the process of learning the above programming methods, we will also explore the following statistical methods:
+\noindent In the process of learning the above programming methods, we may also explore the following statistical methods:
 \begin{itemize}
     \item Exploratory Data Analysis tools
     \item Linear regression
@@ -81,9 +81,6 @@ This course endeavors to build competence in R and Python programming.  We will 
 Students enrolled in this course are responsible for abiding by the Honor Code. A student who has doubts about how the Honor Code applies to any assignment is responsible for obtaining specific guidance from the course instructor before submitting the assignment for evaluation. Ignorance of the rules does not exclude any member of the University community from the requirements and expectations of the Honor Code.  
 
 \noindent The Virginia Tech honor pledge for assignments is as follows: __*"I have neither given nor received unauthorized assistance on this assignment."*__
-
-\noindent The pledge is to be written out on all graded assignments at the university and signed by the student. The honor pledge represents both an expression of the student’s support of the honor code and an unambiguous acknowledgment that the student has, on the assignment in question, abided by the obligation that the Honor Code entails. In the absence of a written honor pledge, the Honor Code still applies to an assignment.  For additional information about the Honor Code, please visit:
-https://www.honorsystem.vt.edu/
 
 
 

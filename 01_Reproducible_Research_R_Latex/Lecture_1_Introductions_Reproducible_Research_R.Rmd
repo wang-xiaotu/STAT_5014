@@ -30,22 +30,22 @@ output:
 
 ## Tentative Course Lecture Schedule
 
-- 30-Aug  Introductions, Reproducible Research, R, Rstudio, Rmarkdown, $\LaTeX$
-- 6-Sep   Rprojects and Git, loading, munging and summarizing data
-- 13-Sep  R functions and logic, good programming practices
-- 20-Sep*  Projecting knowledge in plots, multipanel plots
-- 27-Sep  R's apply family of functions
-- 4-Oct*   Dual treatment of vector and matrix math in R, speed considerations
-- 11-Oct  Parallel computing in R
-- 18-Oct  Rnotebooks, bash/sed/awk, text mining
-- 25-Oct  Python in Rnotebooks
-- 1-Nov   Jupyter notebooks, R in Jupyter
-- 8-Nov   Interactive visualizations
-- 15-Nov  No class
-- 22-Nov  Thanksgiving Break
-- 29-Nov  Big datasets, scripts, scheduler
-- 6-Dec   Open
-- 13-Dec  Open
+- Aug 30  Introductions, Reproducible Research, R, Rstudio, Rmarkdown, $\LaTeX$
+- Sep 6   Rprojects and Git, loading, munging and summarizing data
+- Sep 13  R functions and logic, good programming practices
+- Sep 20*  Projecting knowledge in plots, multipanel plots
+- Sep 27  R's apply family of functions
+- Oct 4*   Dual treatment of vector and matrix math in R, speed considerations
+- Oct 11  Parallel computing in R
+- Oct 18  Rnotebooks, bash/sed/awk, text mining
+- Oct 25  Python in Rnotebooks
+- Nov 1   Jupyter notebooks, R in Jupyter
+- Nov 8*  Interactive visualizations
+- Nov 15  No class
+- Nov 22  Thanksgiving Break
+- Nov 29  Big datasets, scripts, scheduler
+- Dec 6   Open
+- Dec 13  Open
 
 ## Passing the course  
 
@@ -70,7 +70,7 @@ You have worked 6 months to analyze a data set.  You give your collaborator the 
 Guide to this topic here:  
 <http://ropensci.github.io/reproducibility-guide/>
 
-The general, we should **weave** code and text into a complete reference of our work.  The code should:
+In general, we should **weave** code and text into a complete reference of our work.  The code should:
 
 - download (or otherwise load) data
 - reproduce steps to munge data
@@ -98,7 +98,7 @@ Further illustrated by Peng and Eckel (2008)
 From <http://r-project.org>  
 R is an integrated suite of software facilities for data manipulation, calculation and graphical display. 
 
-Rstudio is an IDE for R.  <http://rstudio.com>
+Rstudio is a GUI for R.  <http://rstudio.com>
 
 Reasons to use R:  
 
