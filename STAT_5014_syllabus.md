@@ -46,7 +46,7 @@ Grading based on weekly homework.
 
 ### Grading details:  
 
-Homework will be assigned each week and is accessible via the course git repository. Feel free to discuss assignments with other students, but the work handed in must be exclusively your own unless otherwise noted. Each assignment must be neatly typed in Rmarkdown in formal, correct English. Note that after the first assignement, ALL assignments will be accessible and searchable on the web. As such, think of these assignments as your first public work.  Assignments' due date is one week after the assigned date.  
+Homework will be assigned each week and is accessible via the course git repository. Feel free to discuss assignments with other students, but the work handed in must be exclusively your own unless otherwise noted. Each assignment must be neatly typed in Rmarkdown in formal, correct English. Note that after the first assignement, ALL assignments will be accessible and searchable on the web. As such, think of these assignments as your first public work.  
 
 \newpage
 
