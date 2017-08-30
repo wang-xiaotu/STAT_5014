@@ -61,9 +61,13 @@ There will be ca. 14 homeworks, you need to pass 10.  Each homework will be give
 
 Participation will be defined in the next class and is all or nothing.
 
-## Reproducible Research | Setting the stage
+## Class motivation
 
-You have worked 6 months to analyze a data set.  You give your collaborator the perfect analysis and the results are very exciting.  They go away very happy and you don't hear from them for 1 year.  Suddenly, a flurry of emails ensues, they have new data to add to the previous pipeline, they need alterations to your perfect figure, they have lots of how did you questions, they ask you to write a methods section, etc etc.  You publish your perfect results.  Someone else analyzes the data and comes to *different* conclusions.  Are you sure you didn't have a bug in your code?  How good are your notes???
+1. Regression and ANOVA  
+
+2. UGLY code SUCKS  
+
+3. You have worked 6 months to analyze a data set.  You give your collaborator the perfect analysis and the results are very exciting.  They go away very happy and you don't hear from them for 1 year.  Suddenly, a flurry of emails ensues, they have new data to add to the previous pipeline, they need alterations to your perfect figure, they have lots of how did you questions, they ask you to write a methods section, etc etc.  You publish your perfect results.  Someone else analyzes the data and comes to *different* conclusions.  Are you sure you didn't have a bug in your code?  How good are your notes???
 
 ## Reproducible Research | Concepts
 
