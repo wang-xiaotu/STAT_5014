@@ -1,0 +1,262 @@
+---
+title: 'Loading, cleaning and munging data in R, and (some) Git'
+author: "Bob Settlage"
+date: '`r Sys.Date()`'
+output:
+  ioslides_presentation:
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 4
+    smaller: yes
+  slidy_presentation: default
+---
+
+## Today's Agenda
+
+- Review the concepts of Reproducible Research
+- Introduce Rprojects and Git
+- Importing, cleaning and reformating data
+- Summarizing data
+- Homework 2
+
+
+## Reproducible Research | Review
+
+This was the scenario:  
+You had worked 6 months to analyze a data set.  You gave your collaborator the perfect analysis and the results are very exciting.  They go away very happy and you don't hear from them for 1 year.  Suddenly, a flurry of emails ensues, they have new data to add to the previous pipeline, they need alterations to your perfect figure, they have lots of how did you questions, they ask you to write a methods section, etc etc.  You publish your perfect results.  Someone else analyzes the data and comes to *different* conclusions.  Are you sure you didn't have a bug in your code?  How good are your notes???
+
+Answer: **_Awesome, because you annotated your code with text to create a RR compendium_**
+
+## Reproducible Research - Concepts
+
+Guide to this topic here: 
+<http://ropensci.github.io/reproducibility-guide/>
+
+In general, we should **weave** code and text into a complete reference of our work.  The document should:
+
+- download or otherwise load/generate data
+- reproduce steps to munge data
+- recreate analysis steps
+- create figures and tables
+- explain any and all steps along the way
+- end with conclusions drawn
+- optionally add suggestions for future experiments  
+
+While the above works well as a record of our analysis steps, we are still missing a method to save, archive our work, and do more interesting things like collaborate and use version control.  Perhaps also missing is the ability to sensibly divide our potentially lengthy compendium into smaller compact and re-usable scripts.
+
+## Introducing Rprojects and git
+
+Rprojects combined with git solves these concerns in one go.
+
+First we will deal with Rprojects.  
+
+Rprojects are exactly what they sound like, a group of files, scripts, etc in an organized (hmm, really tracked) directory structure.  Essentially, Rstudio is keeping track of files and directories you tell it are within a project.
+
+How do you make an Rproject??  File --> New Project.
+
+Rprojects enable the use of *version control* systems like git...
+
+## Version Control  
+
+What is version control - a system for storing data and tracking changes.  There are lots of different flavors:
+
+- Git, SVG, Mercural, Perforce, Bazaar, etc etc
+
+In this class, we will use GitHub and make everything public, i.e. free.
+
+One question you are probably asking: "I am just using R for my own assignments, on my own computer, by myself, why should I care about version control?"  Two stack overflow threads should help answer this:  
+
+- Why should I use version control?
+<http://stackoverflow.com/questions/1408450/why-should-i-use-version-control>
+- R and version control for the solo data analyst  
+<http://stackoverflow.com/questions/2712421/r-and-version-control-for-the-solo-data-analyst>
+
+## Version Control and Git
+
+Git is essentially a database of snapshots of the project directory tree.  You decide when and what to take snapshots of and if you using GitHub (or similar) when to push a copy to a remote repository.
+
+The basic workflow is:  
+
+1. **do work**  
+2. git **pull** to make sure you have latest files
+3. git **add** *\<your changed file\>* tells git what change you care about  
+4. git **commit** -m "some INFORMATIVE message about the changes"  
+5. git **push** to the repository (local or remote)  
+6. repeat  
+
+We will tweak this a little to work as a "team".  More instructions in the homework.
+
+## Git file states
+
+- Untracked - files that have not been added to the database
+- Committed - data is safely stored in your local database  
+- Modified - file is changed but not committed it to your database yet  
+- Staged - a modified file in its current version will go in next commit snapshot
+
+![Git file lifecycle](git_file_lifecycle.png)
+
+## Back to Reproducible Research Analysis
+
+From Hadley Wickham & Garrett Grolemund's R for Data Science 
+<http://r4ds.had.co.nz>  
+![Data Science Pipeline](../01_Reproducible_Research_R_Latex/data-science-pipeline.png)  
+
+Today we focus on getting and cleaning the data.
+
+## Data wrangling
+
+Data wrangling or munging is the process of going from raw to useful data format.  This can be 60-80% of the time spent on a project.  Steps may include any or all of the following:
+
++----------+-------------------------+
+| Step     | Examples                |
++==========+=========================+
+| Import   | - read.table(html,json) |
++----------+-------------------------+
+| Clean    | - filter and subset     |
+|          | - standardize           |
+|          | - renaming              |
+|          | - type conversions      |
++----------+-------------------------+
+| Reformat | - merging               |
+|          | - reshaping             |
+|          | - aggregating           |
++----------+-------------------------+
+
+
+## Data wrangling -- import data 
+
+- load internal dataset 
+```{r echo=T, eval=F}
+    library(help = "datasets")
+    ?PlantGrowth
+```
+- copy and paste  
+- load file  
+    + local  
+    + web  
+```{r echo=T, eval=F}
+    ?read.table; ?read.csv
+    url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/onewaymuzzle.dat"
+    chp2_muzzle<-read.table(url,header=T)
+    #google "how to get data into R"
+```
+- generate data
+```{r echo=T, eval=F}
+    set.seed(123456)
+    coin_flips<-rbinom(n = 1000,size = 1, prob = .501)
+```
+
+## Data wrangling - cleaning  
+
+Getting data into R is *__usually__* not the problem, often the fun starts when we start to actually look at what we were given.  Common issues:  
+
+issue | examples
+:-----|:-------
+missing values | recorded as "-", "NA","0"
+jagged arrays | missing fields  
+inconsistent data coding | 2017-01-22 vs 01-22-2017 
+line termination | platform inconsistencies
+field delimiter issues | csv has data values that use commas  
+  
+
+And pretty much any other issue you might imagine.
+
+
+## Data wrangling - reformatting/standardizing
+
+Now that we have the data in R, we need to get it into a useable format.  One idea for a set of standards for structuring a data set is to create a so called "tidy" data set.
+
+<http://vita.had.co.nz/papers/tidy-data.html>
+
+Essentially, we need to reformat the data such that:  
+
+1. Each variable forms a column.  
+2. Each observation forms a row.  
+3. Each type of observational unit forms a table.  
+
+Any other structure to the data is considered messy.  Sound easy?  
+
+## Data wrangling - reformatting 
+
+OK, what is wrong with this? 
+```{r, echo=F, eval=T}
+    messy_data1_df<-data.frame(treatmenta=c("NA",16,3),treatmentb=c(2,11,1),row.names=c("John Smith","Jane Doe","Mary Johnson"),stringsAsFactors=F)
+    knitr::kable(messy_data1_df,format = "markdown", caption="Messy Data")
+```
+  
+What we want is something more akin to a model:  
+
+$$
+y_i = x_{i1} + x_{i2} ...
+$$
+
+## Data wrangling - tidy example
+
+```{r, echo=T, eval=T}
+    library(tidyr,quietly=T,warn.conflicts=F)
+    library(dplyr,quietly=T,warn.conflicts=F)
+    tidy_data1_df<-messy_data1_df %>%
+                    mutate(names=rownames(messy_data1_df)) %>%
+                    gather(treatment,value,treatmenta:treatmentb) %>%
+                    mutate(treatment=gsub("treatment","",treatment),
+                           value=readr::parse_number(value))
+    knitr::kable(tidy_data1_df,format = "markdown", caption="Tidy Data")
+```
+
+## Data wrangling - base R  
+
+The point in data munging is efficiently transforming and cleaning data to bring it into a usable state.  In the example above, we saw functions from _plyr_ and _tidyr_ (look up _tidyverse_) used for to create a data "pipeline".  You may find other solutions that suit you better.
+
+```{r, echo=T, eval=F}
+    tidy_data1_df<-cbind(messy_data1_df,names=rownames(messy_data1_df))
+    tidy_data1_df<-rbind(tidy_data1_df,tidy_data1_df)
+    tidy_data1_df[4:6,1]<-tidy_data1_df[4:6,2]
+    tidy_data1_df$treatmentb<-rep(c("a","b"),each=3)
+    colnames(tidy_data1_df)<-c("value","treatment","names")
+    rownames(tidy_data1_df)<-NULL
+    tidy_data1_df<-tidy_data1_df[,c(3,2,1)]
+    tidy_data1_df$value<-as.numeric(tidy_data1_df$value)
+```
+
+
+## Data wrangling - messy data symptoms
+
+- Column headers are values, not variable names.
+- Multiple variables are stored in one column.
+- Variables are stored in both rows and columns.
+- Multiple types of observational units are stored in the same table.  
+- A single observational unit is stored in multiple tables.
+
+## Data wrangling - summarizing and tables
+
+There are many useful metrics to capture.  At a high level, here we really are most concerned with metrics associated with the data structure, i.e. number of observations, missing values, data types etc.  R has a function for that...  :)  
+
+```{r echo=T,eval=F}
+    ?str
+    ?summary
+```
+
+To print the table in a document, we have several options.  My current favorite is kable.  Other community tools include **Pander** and **xtable**.  Use kable by:
+
+## Data wrangling - Tidy summary
+
+```{r echo=T, eval=T}
+    knitr::kable(summary(tidy_data1_df),caption="Tidy Data Summary")
+```
+
+## Good practices note
+
+If you are getting data from the internet, it is a good idea to protect against:
+
+1. data source being down  
+2. data source being changed  
+3. other unknown issues  
+
+I generally pull the data down, then save the data to a .Rds file.  My project includes:  
+
+1. commented code used to pull data down  
+2. commented code used to save data  
+3. code to read data into R from the saved file  
+4. AND often project image files as mid-stream checkpoints
+
+## Homework 2

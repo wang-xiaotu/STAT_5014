@@ -1,0 +1,28 @@
+yaml
+default chunk options
+code initialization
+read, save and load data
+
+dplyr
+	-filter
+	-arrange
+	-select
+	-mutate/transmute
+	-summarize
+tidyr
+	-gather
+	-separate
+	-spread
+gsub
+lm
+anova
+tables
+	-kable
+	-xtable
+	-stargazer
+	
+##best practices
+	-NEVER attach datasets in code
+	-ALWAYS git pull/add/commit/push prior to shutting computer
+	-ALWAYS use summary and str to make sure you know what your data looks like
+	-ALWAYS try to plot the data

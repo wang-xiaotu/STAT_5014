@@ -18,7 +18,8 @@ header-includes: \setlength\parindent{24pt} \usepackage{MnSymbol} \usepackage{ma
 CRN:            87756
 Office:         3030 Torgersen
 Email:          rsettlag@vt.edu
-Office hours:   MF 9-10, location TBD
+Office hours:   M 9-10, Smyth 232
+                F 9-10, Torgersen 3030 (inside 3050)
 Course Website: https://github.com/rsettlage/STAT_5014
 --------------  ---------------------------------------
 
