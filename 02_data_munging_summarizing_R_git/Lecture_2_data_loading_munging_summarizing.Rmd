@@ -236,7 +236,7 @@ There are many useful metrics to capture.  At a high level, here we really are m
     ?summary
 ```
 
-To print the table in a document, we have several options.  My current favorite is kable.  Other community tools include **Pander** and **xtable**.  Use kable by:
+To print the table in a document, we have several options.  My current favorites are kable and stargazer.  Other community tools include **Pander** and **xtable**.  Use kable by:
 
 ## Data wrangling - Tidy summary
 

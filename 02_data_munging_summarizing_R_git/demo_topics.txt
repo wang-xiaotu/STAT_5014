@@ -1,7 +1,13 @@
+Rproject windows, file states and workflow
+
+Rmarkdown stuff
 yaml
 default chunk options
 code initialization
 read, save and load data
+
+cache=T
+lists and 2 spaces at end of item OR \\
 
 dplyr
 	-filter
