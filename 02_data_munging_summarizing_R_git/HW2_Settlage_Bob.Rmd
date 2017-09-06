@@ -1,0 +1,157 @@
+---
+title: "Stat 5014 HW2"
+author: "Bob Settlage"
+date: '`r Sys.Date()`'
+output:
+  pdf_document: null
+  fig_caption: yes
+  fig_height: 6
+  fig_width: 7
+  html_document: default
+  classoption: landscape
+header-includes: \setlength\parindent{24pt} \usepackage{MnSymbol} \usepackage{mathrsfs}
+---
+
+```{r setup, include=FALSE, message=F, warning=F}
+    #initialize and load libraries
+    rm(list = ls())   
+    graphics.off()
+    options(scipen = 4, digits = 6)
+    options(stringsAsFactors = FALSE)
+    knitr::opts_chunk$set(echo = F, eval=T, cache=T, tidy.opts=list(width.cutoff=55),
+                tidy=T, include=FALSE, message=F, warning=F)
+    library.warn <- library
+    library <- function(package, help, pos = 2, lib.loc = NULL, character.only = FALSE,
+                        logical.return = FALSE, warn.conflicts = FALSE, quietly = TRUE,
+                        verbose = getOption("verbose")) {
+       if (!character.only) {
+          package <- as.character(substitute(package))
+       }
+       suppressPackageStartupMessages(library.warn(
+          package, help, pos, lib.loc, character.only = TRUE,
+          logical.return, warn.conflicts, quietly, verbose))}
+    #setwd("~/Google Drive/Projects/....")
+
+    #install.packages("scatterplot3d")
+    #library(scatterplot3d)
+    #install.packages("car")
+    #library(car)
+    #library(doParallel)
+    #setup parallel backend to use 7 processors
+    #no_cores <- detectCores() - 2
+    #cl<-makeCluster(no_cores)
+    #registerDoParallel(cl)
+    #stopCluster(cl)
+    #library(MASS)
+    #library(RColorBrewer)
+    #library(plot3D)
+    #install.packages("tidyverse") ##kinda overkill, only need dplyr and tidyr
+    library(dplyr)
+    library(tidyr)
+    library(beeswarm)
+    library(stargazer)
+```
+
+```{r misc_function}
+# A function for captioning and referencing images
+# figure captions are a pain IMO, I don't remember where I got this from but it may be referenced here: 
+##https://rpubs.com/ajlyons/autonumfigs
+
+fig <- local({
+    i <- 0
+    ref <- list()
+    list(
+        cap=function(refName, text) {
+            i <<- i + 1
+            ref[[refName]] <<- i
+            text
+        },
+        ref=function(refName) {
+            ref[[refName]]
+        })
+})
+#cat("\n\n\\pagebreak\n")
+```
+
+#Problem 4
+
+Version control can assist in:
+
+\begin{itemize}
+    \item first thought  
+    \item second thought  
+    \item third thought
+\end{itemize}
+
+\noindent The last way to make lists was more explicit and offers more control, but sometimes you just want a simple list or are targeting html so do it this way (note blank line and two spaces are important):  
+
+* another way  
+* list item  
+* list item
+
+#Problem 5
+
+Here we will read in, clean and filter datasets with the final goal of creating tidy datasets.  I am going to create a figure for each one to play with plotting functions.
+
+##CMM data
+
+First, we will read in and create a tidy dataset.  After tidying, a summary is in Table 1 with a boxplot in Figure 1.  I will put this code in an Appendix.
+```{r Problem5_CMM_analysis, echo=F, eval=T}
+    ########################### 
+    #Problem5_CMM_analysis  
+    #get data  
+    ########################### 
+    url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/CMM.dat"
+    CMM_raw<-read.table(url, header=F, skip=1, fill=T, stringsAsFactors = F)
+    CMM_tidy<-CMM_raw[-1,]
+    colnames(CMM_tidy)<-c("part","Op1_1","Op1_2","Op2_1","Op2_2")
+    CMM_tidy<-CMM_tidy %>%  
+        gather(op_rep,value,Op1_1:Op2_2) %>%  
+        separate(op_rep,into=c("operator","replicate"),sep="_") %>%  
+        mutate(operator = gsub("Op","",operator)) %>%  
+        mutate(replicate = as.numeric(replicate)) %>%  
+        mutate(part = as.numeric(part))
+    ########################### 
+    
+```
+
+
+```{r CMM_table, echo=F, include=T, eval=T, results='asis'}
+    knitr::kable(summary(CMM_tidy), caption="CMM data summary")
+```
+
+
+```{r problem5_CMM_fig1, eval=T, echo=F, cache=F, include=T, results='asis', fig.cap=fig$cap("plot1","CMM data, boxplot by operator, color by replicate, label is part number."),fig.width=5, fig.height=5, fig.align="center"}  
+    ########################### 
+    #Problem5_CMM_analysis  
+    #plot  
+    ########################### 
+    boxplot(value~operator, data=CMM_tidy, xlab="Operator")
+    beeswarm(value~operator, data=CMM_tidy, pwcol=CMM_tidy$replicate,pwpch=as.character(CMM_tidy$part),add=T)
+    legend("topleft",legend = levels(as.factor(CMM_tidy$replicate)),pch=20,col=levels(as.factor(CMM_tidy$replicate)))
+
+```
+
+Finally, lets create a quick linear model to play with tables.  Note, this analyis is not technically correct, you will learn more about why in the Design of Experiments class.  We will use this model:
+
+\begin{equation}
+y_i=intercept+part_i+operator_i+\epsilon_i
+\end{equation}
+
+```{r quick_dirty, eval=T, echo=F, include=T, results='asis'}
+
+    CMM_tidy_lm<-lm(value~as.factor(part)+as.factor(operator),data=CMM_tidy)
+    stargazer(CMM_tidy_lm,title = "Playing with tables",header = F,no.space=T,single.row=T)
+```
+  
+```{r,eval=F,echo=F}
+    z<-matrix(rnorm(8000*8000),nrow=8000,ncol=8000)
+    system.time(solve(z))
+```
+\newpage  
+  
+  
+#Appendix 1: R code  
+```{r Appendix, ref.label=c("Problem5_CMM_analysis","problem5_CMM_fig1"), echo=TRUE, eval=F, tidy=TRUE, include=T}
+  
+```
