@@ -1,0 +1,150 @@
+---
+title: 'Good programming practices, R functions and logic'
+author: "Bob Settlage"
+date: '`r Sys.Date()`'
+output:
+  ioslides_presentation:
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 4
+    smaller: yes
+  slidy_presentation: default
+---
+
+## Today's Agenda
+
+- Review Git  
+- Review data cleaning and munging  
+- Introduce good programming practices  
+- R functions  
+- if else 
+- while loop  
+- for next  
+- Homework 3
+
+
+
+## Version Control and Git
+
+Git is essentially a database of snapshots of the project directory tree.  You decide what and when to take snapshots of and if you using GitHub (or similar) when to push a copy to a remote repository.
+
+The basic workflow is:  
+
+1. **do work**  
+2. git **pull** to make sure you have latest files
+3. git **add** *\<your changed file\>* tells git what change you care about  
+4. git **commit** -m "some INFORMATIVE message about the changes"  
+5. git **push** to the repository (local or remote)  
+6. repeat  
+
+## Git file states
+
+- Untracked - files that have not been added to the database
+- Committed - data is safely stored in your local database  
+- Modified - file is changed but not committed it to your database yet  
+- Staged - a modified file in its current version will go in next commit snapshot
+
+![Git file lifecycle](git_file_lifecycle.png)
+
+## Back to Reproducible Research Analysis
+
+From Hadley Wickham & Garrett Grolemund's R for Data Science 
+<http://r4ds.had.co.nz>  
+![Data Science Pipeline](../01_Reproducible_Research_R_Latex/data-science-pipeline.png)  
+
+Our first job is usally to get and "tidy" the data.
+
+## Tidy Data
+
+We have multiple ways to get data into R.  We now have to get it into a useable format.  Tidy.
+
+<http://vita.had.co.nz/papers/tidy-data.html>
+
+Messy:  
+- Column headers are values, not variable names.  
+- Multiple variables are stored in one column.  
+- Variables are stored in both rows and columns.  
+- Multiple types of observational units are stored in the same table.  
+- A single observational unit is stored in multiple tables.
+
+Tidy:  
+1. Each variable forms a column.  
+2. Each observation forms a row.  
+3. Each type of observational unit forms a table.  
+
+## Messy ---> Tidy  :)
+
+```{r, echo=F, eval=T}
+    messy_data1_df<-data.frame(treatmenta=c("NA",16,3),treatmentb=c(2,11,1),row.names=c("John Smith","Jane Doe","Mary Johnson"),stringsAsFactors=F)
+    knitr::kable(messy_data1_df,format = "markdown", caption="Messy Data")
+```
+
+```{r, echo=F, eval=T}
+    library(tidyr,quietly=T,warn.conflicts=F)
+    library(dplyr,quietly=T,warn.conflicts=F)
+    tidy_data1_df<-messy_data1_df %>%
+                    mutate(names=rownames(messy_data1_df)) %>%
+                    gather(treatment,value,treatmenta:treatmentb) %>%
+                    mutate(treatment=gsub("treatment","",treatment),
+                           value=readr::parse_number(value))
+    knitr::kable(tidy_data1_df,format = "markdown", caption="Tidy Data")
+```
+
+## Good Programming Practices
+
+Now that we have the data in a nice format, we need to analyze it.  Most analysis will require some amount of programming.  As we program, we should strive to create readable and reusable code.  The art of creating good code is captured in the broad and opinionated topic of Good Programming Practices.  There are many ideas about what constitues good.  You will devolop your own style, but it would be good to start with some guidance from some experts.  
+
+Google's R Style Guide <https://google.github.io/styleguide/Rguide.xml>  
+Hadley Wickam's Style Guide: <http://r-pkgs.had.co.nz/style.html>  
+
+## Good Programming Practices cont
+
+Remember: ultimate goal is Reproducible Research.  
+To enable this, we need well documented (annotated) readable code.
+
+1. variable/object names  
+    + nouns describing what the object holds, e.g. originaData instad of d  
+    + DO NOT use existing variables or functions, e.g. T<-1000
+2. function formation  
+    + function names should be verb associated with the function purpose  
+    + comment both function purpose and required arguments    
+    + arguments should have defaults (my personal and often not followed preference)
+    + my preference is to explicitly return a value  
+3. commenting rules  
+    + comment your code!!  'nough said?  
+4. indent within logical blocks of code !!
+    + indenting improves the readability of the code by orders of magnetute!  
+    
+## Functions
+
+```{r echo=T, eval=T}
+    dataA<-1;dataB<-2
+    computeMean<-function(x=3,y=5){
+        # quick function to compute the mean of two numbers, x and y
+        # x and y should be numeric
+        # returns numeric mean
+        #should put some error checks in here, what if x || y are not numeric??
+        return(mean(c(x,y)))
+    }
+    computeMean(x=dataA,y=dataB)
+```
+
+Note that our function definition includes passing in ALL necessary data.  If we do not do this, we can have MAJOR issues with variable scope that is often difficult to troubleshoot. 
+
+## FOR statement
+
+Often, we want to loop through a set number of items or do a task a predetermined length of time.
+
+## If ELSE statement
+
+A powerful addition to any program is the ability to change the course of the program as conditions change.  In R, one such flow change statement is the if else statement.
+
+```{r eval=T, echo=T}
+    for(i in 1:10){
+        if(i %% 2 ==1){
+            print(paste0("i=",i," is odd"))
+        }
+    }
+```
+
+## Homework 3
