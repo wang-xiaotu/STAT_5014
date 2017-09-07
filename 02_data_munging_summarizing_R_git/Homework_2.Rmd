@@ -62,11 +62,11 @@ In the lecture, there were two links to StackOverflow questions on why one shoul
 
 In this exercise, you will import, munge, clean and summarize datasets from Wu and Hamada's _Experiments: Planning, Design and Analysis_ book you will use in the Spring.  For each one, please weave your code and text to describe both your process and observations.  Make sure you create a tidy dataset describing the variables, create a summary table of the data, note issues with the data.  
 
-a. CMM measurement data from two operators.    
+a. Sensory data from five operators.    
 <http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/Sensory.dat> 
 b. Gold Medal performance for Olympic Men's Long Jump, year is coded as 1900=0.  
 <http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/LongJumpData.dat>  
-c. Brain weight (g) and body weight (kg) for 62 species.  
+c. Brain weight (g) and body weight (kg) for 62 species.    
 <http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/BrainandBodyWeight.dat>  
 d. Triplicate measurements of tomato yield for two varieties of tomatos at three planting densities.  
 <http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/tomato.dat>  
