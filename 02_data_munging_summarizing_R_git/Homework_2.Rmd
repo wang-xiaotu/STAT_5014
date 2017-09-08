@@ -44,6 +44,14 @@ In Rstudio, create a new Rproject using version control.
 3. In the Project directory name box, type STAT_5015_homework  
 4. In the Create project as subdirectory, browse to where you want your homework files to live.
 
+### Part D: !!*Do this to get updates*!!
+
+In the directory you put the project file, do:  
+
+1. git remote add upstream <https://github.com/rsettlage/STAT_5014.git>
+2. git checkout master
+3. git pull upstream master
+
 ## Problem 3
 
 In the last problem, you forked my class repo and then "cloned" it to your local hard drive.  If you explore the files that were pulled down, you will notice that there is a subdirectory called "02_data_munging_summarizing_R".  
@@ -74,6 +82,31 @@ d. Triplicate measurements of tomato yield for two varieties of tomatos at three
 ## Problem 6
 
 In the swirl lessons, you played with a dataset "plants".  Our ultimate goal is to see if there is a relationship between pH and Foliage_Color.  Consider a statistic that combines the information in pH_Min and pH_Max.  Clean, summarize and transform the data as appropriate.  Use function _lm_ to test for a relationship.  Report both the coefficients and ANOVA results in table form.
+
+Note that if you didn't just do the swirl lesson, it is now not available.  Add the following code to your project to retrieve it.
+
+```{r echo=T, eval=F}
+
+# Path to data
+.datapath <- file.path(path.package('swirl'), 'Courses',
+                      'R_Programming_E', 'Looking_at_Data',
+                      'plant-data.txt')
+# Read in data
+plants <- read.csv(.datapath, strip.white=TRUE, na.strings="")
+
+# Remove annoying columns
+.cols2rm <- c('Accepted.Symbol', 'Synonym.Symbol')
+plants <- plants[, !(names(plants) %in% .cols2rm)]
+
+# Make names pretty
+names(plants) <- c('Scientific_Name', 'Duration', 'Active_Growth_Period',
+                   'Foliage_Color', 'pH_Min', 'pH_Max',
+                   'Precip_Min', 'Precip_Max',
+                   'Shade_Tolerance', 'Temp_Min_F')
+```
+
+
+
 
 ## Problem 7
 
