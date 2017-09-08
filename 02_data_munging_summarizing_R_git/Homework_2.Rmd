@@ -138,7 +138,16 @@ Finish this homework by pushing your changes to your repo and submitting me a pu
 5. In R: push -- this pushes your local changes to the repo  
 6. In Github: submit a pull request -- this tells me you are wanting me to pull in your changes to my master repo
 
-If you have difficulty with steps 1-5, git is not correctly or completely setup.
+If you have difficulty with steps 1-5, git is not correctly or completely setup.  The above will pull from your repo, so does not include anything to get from MY repo, ie nothing new will show up.
+
+To get stuff from my repo which you then can push to your repo, modify the above to be:
+
+1. In R: do some work  
+2. At command prompt: git pull upstream master -- to make sure you have the most recent repo 
+3. In R: check files you want to commit (this MAY include files I added/changed)  
+4. In R: commit, make message INFORMATIVE and USEFUL  
+5. In R: push -- this pushes OUR local changes to YOUR repo  
+6. In Github: submit a pull request -- this tells me you are wanting me to pull in your changes to my master repo
 
 **Only submit the .Rmd and .pdf solution files.  Names should be formatted HW2_lastname_firstname.Rmd and HW2_lastname_firstname.pdf**
 
