@@ -45,8 +45,7 @@ header-includes: \setlength\parindent{24pt} \usepackage{MnSymbol} \usepackage{ma
     #library(RColorBrewer)
     #library(plot3D)
     #install.packages("tidyverse") ##kinda overkill, only need dplyr and tidyr
-    library(dplyr)
-    library(tidyr)
+    library(tidyverse)
     library(beeswarm)
     library(stargazer)
 ```
@@ -148,7 +147,116 @@ y_i=intercept+part_i+operator_i+\epsilon_i
     system.time(solve(z))
 ```
 \newpage  
+
+#Now for the actual homework:
+#Problem 5
+
+##Part A: Sensory data
+
+```{r Problem5_Sensory_analysis, echo=F, eval=T}
+    ########################### 
+    #Problem5_Sensory_analysis  
+    #get data  
+    ########################### 
+    url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/Sensory.dat"
+    Sensory_raw<-read.table(url, header=F, skip=1, fill=T, stringsAsFactors = F)
+    Sensory_tidy<-Sensory_raw[-1,]
+    Sensory_tidy_a<-filter(.data = Sensory_tidy,V1 %in% 1:10) %>%
+                    rename(Item=V1,V1=V2,V2=V3,V3=V4,V4=V5,V5=V6)
+    Sensory_tidy_b<-filter(.data = Sensory_tidy,!(V1 %in% 1:10)) %>%
+                    mutate(Item=rep(as.character(1:10),each=2)) %>%
+                    mutate(V1=as.numeric(V1)) %>%
+                    select(c(Item,V1:V5))
+    Sensory_tidy<-bind_rows(Sensory_tidy_a,Sensory_tidy_b)
+    colnames(Sensory_tidy)<-c("Item",paste("Person",1:5,sep="_"))
+    Sensory_tidy<-Sensory_tidy %>%  
+        gather(Person,value,Person_1:Person_5) %>%  
+        mutate(Person = gsub("Person_","",Person)) %>%
+        arrange(Item)
+    
+    ########################### 
+    
+```
+
+```{r Sensory_table, echo=F, include=T, eval=T, results='asis'}
+    knitr::kable(summary(Sensory_tidy), caption="Sensory data summary")
+```
+
+##Part B: Long Jump data
+
+```{r Problem5_LongJump_analysis, echo=F, eval=T}
+    ########################### 
+    #Problem5_LongJump_analysis  
+    #get data  
+    ########################### 
+    url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/LongJumpData.dat"
+    LongJump_raw<-read.table(url, header=F, skip=1, fill=T, stringsAsFactors = F)
+    colnames(LongJump_raw)<-rep(c("V1","V2"),4)
+    LongJump_tidy<-rbind(LongJump_raw[,1:2],LongJump_raw[,3:4],
+                             LongJump_raw[,5:6],LongJump_raw[,7:8])
+    LongJump_tidy<-LongJump_tidy %>%  
+        filter(!(is.na(V1))) %>%
+        mutate(YearCode=V1, Year=V1+1900, dist=V2) %>%
+        select(-V1,-V2)
+    
+    ########################### 
+    
+```
+
+```{r LongJump_table, echo=F, include=T, eval=T, results='asis'}
+    knitr::kable(summary(LongJump_tidy), caption="Long Jump data summary")
+```
+
+##Part C: Brain vs Body data
+
+```{r Problem5_BrainBody_analysis, echo=F, eval=T}
+    ########################### 
+    #Problem5_BrainBody_analysis  
+    #get data  
+    ########################### 
+    url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/BrainandBodyWeight.dat"
+    BrainBody_raw<-read.table(url, header=F, skip=1, fill=T, stringsAsFactors = F)
+    colnames(BrainBody_raw)<-rep(c("Brain","Body"),3)
+    BrainBody_tidy<-rbind(BrainBody_raw[,1:2],BrainBody_raw[,3:4],
+                             BrainBody_raw[,5:6])
+    BrainBody_tidy<-BrainBody_tidy %>%  
+        filter(!(is.na(Brain))) 
+    
+    ########################### 
+    
+```
+
+```{r BrainBody_table, echo=F, include=T, eval=T, results='asis'}
+    knitr::kable(summary(BrainBody_tidy), caption="Brain/Body weight data summary")
+```
   
+##Part C: Tomato data
+
+```{r Problem5_Tomato_analysis, echo=F, eval=T}
+    ########################### 
+    #Problem5_Tomato_analysis  
+    #get data  
+    ########################### 
+    url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/tomato.dat"
+    Tomato_raw<-read.table(url, header=F, skip=2, fill=T, stringsAsFactors = F, comment.char = "")
+    Tomato_tidy<-Tomato_raw %>%  
+        separate(V2,into=paste("C10000",1:3,sep="_"),sep=",",remove=T, extra="merge") %>%
+        separate(V3,into=paste("C20000",1:3,sep="_"),sep=",",remove=T, extra="merge") %>%
+        separate(V4,into=paste("C30000",1:3,sep="_"),sep=",",remove=T, extra="merge") %>%
+        gather(Clone,value,C10000_1:C30000_3) %>%
+        mutate(Variety=V1, Clone=gsub("C","",Clone)) %>%
+        mutate(Variety=gsub("\\\\#"," ",Variety)) %>%
+        separate(Clone,into = c("Clone","Replicate")) %>%
+        select(-V1,Variety,Clone,value) %>%
+        arrange(Variety) 
+        
+    ########################### 
+    
+```
+
+```{r Tomato_table, echo=F, include=T, eval=T, results='asis'}
+    knitr::kable(summary(Tomato_tidy), caption="Tomato data summary")
+```
   
 #Appendix 1: R code  
 ```{r Appendix, ref.label=c("Problem5_CMM_analysis","problem5_CMM_fig1"), echo=TRUE, eval=F, tidy=TRUE, include=T}
