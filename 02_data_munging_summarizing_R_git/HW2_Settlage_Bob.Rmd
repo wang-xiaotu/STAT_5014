@@ -48,6 +48,8 @@ header-includes: \setlength\parindent{24pt} \usepackage{MnSymbol} \usepackage{ma
     library(tidyverse)
     library(beeswarm)
     library(stargazer)
+    library(data.table)
+    library(lubridate)
 ```
 
 ```{r misc_function}
@@ -243,6 +245,7 @@ y_i=intercept+part_i+operator_i+\epsilon_i
         separate(V2,into=paste("C10000",1:3,sep="_"),sep=",",remove=T, extra="merge") %>%
         separate(V3,into=paste("C20000",1:3,sep="_"),sep=",",remove=T, extra="merge") %>%
         separate(V4,into=paste("C30000",1:3,sep="_"),sep=",",remove=T, extra="merge") %>%
+        mutate(C10000_3=gsub(",","",C10000_3)) %>%
         gather(Clone,value,C10000_1:C30000_3) %>%
         mutate(Variety=V1, Clone=gsub("C","",Clone)) %>%
         mutate(Variety=gsub("\\\\#"," ",Variety)) %>%
@@ -256,6 +259,51 @@ y_i=intercept+part_i+operator_i+\epsilon_i
 
 ```{r Tomato_table, echo=F, include=T, eval=T, results='asis'}
     knitr::kable(summary(Tomato_tidy), caption="Tomato data summary")
+```
+  
+#Problem 7  
+
+In this problem, we are to munge and create some summary statistics for a large dataset.  Going in, we know this is a large dataset, so I Google'd "read large dataset in r" and came up with
+ <https://rpubs.com/msundar/large_data_analysis> as my top hit.  At 2015, it is a *little* dated, but reading through it, it seems to have some good advice, so I am going to try it and see.  The first suggestion is to read in a little data so that we know can set the column classes, so let's do that on all three datafiles (I downloaded them onto my local drive via wget)
+
+```{r Problem7_Car_analysis, echo=F, eval=T, include=T}
+    ########################### 
+    #Problem7_Car_analysis  
+    #get data  
+    ########################### 
+
+    Car_Gebreken_raw <- read.csv("Open_Data_RDW__Gebreken.csv",stringsAsFactors = F, nrows=200, header=T,quote = '"')
+    Car_Geconstat_raw <- read.csv("Open_Data_RDW__Geconstateerde_Gebreken.csv", stringsAsFactors = F, nrows=200, header=T)
+    Car_Person_raw <- read.csv("Personenauto_basisdata.csv",stringsAsFactors = F, nrows=200, header=T)
+    
+    Car_Gebreken_raw.colclass <- sapply(Car_Gebreken_raw,class)
+    Car_Geconstat_raw.colclass <- sapply(Car_Geconstat_raw,class)
+    Car_Person_raw.colclass <- sapply(Car_Person_raw,class)
+    
+    print("Gebreken")
+    print(Car_Gebreken_raw.colclass)
+
+    print("Geconstat")
+    print(Car_Geconstat_raw.colclass)
+
+    print("Personen")
+    print(Car_Person_raw.colclass)
+    
+```
+
+From the discussion, it looks to me as if the path of least resistance is to use fread and data.tables.  As a cool aside, note that you can print data.tables and it only shows the first and last 5 lines AND if you have too many columns, it only shows what fits to screen.  Data.tables are replacing data.frames.  They are faster to manipulate and offer additional functionality.  Continuing with this problem, I think we should limit the import to only those columns we are interested in to save some space.  We could filter on date (2017) in line, but for this I am thinking we will convert to date and then filter.  Actually, I hate dealing with dates, so I am filtering using grep.
+
+```{r Problem7_munging}
+    #this had the defect code and description
+    Car_Gebreken_select <- fread(input = "Open_Data_RDW__Gebreken.csv", header = T, select=c(1,6), showProgress=F)
+    #this has the license plate, inspection date and defect code
+    Car_Geconstat_select <- fread(input = "Open_Data_RDW__Geconstateerde_Gebreken.csv", header=T, select=c(1,3,5),showProgress=F)
+    #this has the license plate, make and model of vehicle
+    Car_Person_select <- fread(input = "Personenauto_basisdata.csv", header=T, showProgress = F, select = c(1,3,4))
+    
+    Car_Geconstat_select_2017 <- Car_Geconstat_select[grep("2017",Car_Geconstat_select$"Meld datum door keuringsinstantie"),]
+    ########################### 
+    
 ```
   
 #Appendix 1: R code  
