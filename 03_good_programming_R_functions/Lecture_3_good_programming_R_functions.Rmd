@@ -14,14 +14,13 @@ output:
 ## Today's Agenda
 
 - Review Git  
-- Review data cleaning and munging  
+- Review data munging and creating tidy datasets  
 - Introduce good programming practices  
 - R functions  
+- for next  
 - if else 
 - while loop  
-- for next  
 - Homework 3
-
 
 
 ## Version Control and Git
@@ -36,6 +35,8 @@ The basic workflow is:
 4. git **commit** -m "some INFORMATIVE message about the changes"  
 5. git **push** to the repository (local or remote)  
 6. repeat  
+
+<https://github.com/rsettlage/STAT_5014>
 
 ## Git file states
 
@@ -92,7 +93,7 @@ Tidy:
 
 ## Good Programming Practices
 
-Now that we have the data in a nice format, we need to analyze it.  Most analysis will require some amount of programming.  As we program, we should strive to create readable and reusable code.  The art of creating good code is captured in the broad and opinionated topic of Good Programming Practices.  There are many ideas about what constitues good.  You will devolop your own style, but it would be good to start with some guidance from some experts.  
+Most analysis will require some amount of programming.  As we program, we should strive to create readable and reusable code.  The art of creating good code is captured in the broad and opinionated topic of Good Programming Practices.  You will devolop your own style, but it would be good to start with some guidance from some experts.  
 
 Google's R Style Guide <https://google.github.io/styleguide/Rguide.xml>  
 Hadley Wickam's Style Guide: <http://r-pkgs.had.co.nz/style.html>  
@@ -100,7 +101,7 @@ Hadley Wickam's Style Guide: <http://r-pkgs.had.co.nz/style.html>
 ## Good Programming Practices cont
 
 Remember: ultimate goal is Reproducible Research.  
-To enable this, we need well documented (annotated) readable code.
+To enable this, we need well documented (annotated) _**readable**_ code.
 
 1. variable/object names  
     + nouns describing what the object holds, e.g. originaData instad of d  
@@ -108,7 +109,7 @@ To enable this, we need well documented (annotated) readable code.
 2. function formation  
     + function names should be verb associated with the function purpose  
     + comment both function purpose and required arguments    
-    + arguments should have defaults (my personal and often not followed preference)
+    + arguments should have defaults (my personal preference)
     + my preference is to explicitly return a value  
 3. commenting rules  
     + comment your code!!  'nough said?  
@@ -117,23 +118,65 @@ To enable this, we need well documented (annotated) readable code.
     
 ## Functions
 
-```{r echo=T, eval=T}
+A function is an _**object**_ that takes some input objects (args) and produces some output objects.
+
+```{r echo=T, eval=F}
     dataA<-1;dataB<-2
-    computeMean<-function(x=3,y=5){
-        # quick function to compute the mean of two numbers, x and y
-        # x and y should be numeric
-        # returns numeric mean
-        #should put some error checks in here, what if x || y are not numeric??
+    BAD<-function(x){
+        mean(c(x,dataA))
+    }
+    computeMeanGOOD<-function(x=3,y=5){
+        # quick function to compute the geometric mean of two numbers, x and y
+        # returns geometric mean
+        if (!is.numeric(x) || !is.numeric(y)) stop("both x and y must be numeric")
         return(mean(c(x,y)))
     }
-    computeMean(x=dataA,y=dataB)
+    BAD(x=dataB)
+    computeMeanGOOD(x=dataA,y=dataB)
 ```
 
-Note that our function definition includes passing in ALL necessary data.  If we do not do this, we can have MAJOR issues with variable scope that is often difficult to troubleshoot. 
+GOOD functions include passing in ALL necessary data.  If we do not do this, we can have MAJOR issues with variable scope that is often difficult to troubleshoot.  Ideally our code includes error checking.
+
+_**All**_ work in R is done in functions. '[<-'(animals,4,"duck")
+
+## Variable scope
+
+R uses Lexical scoping rules.  What tha?
+
+<https://darrenjw.wordpress.com/2011/11/23/lexical-scope-and-function-closures-in-r/>  
+Totally recommend subscribing to Darren's blog AND reading all his past posts.  
+
+<http://andrewgelman.com/2014/01/29/stupid-r-tricks-random-scope/>  
+Another good site.  Also has a few great stats books.
+
+While we are at it, r-bloggers has many useful tidbits. <https://www.r-bloggers.com>
+
+```{r eval=F, echo=T}
+    z <- 1; a <- 1
+    m <- function(){a <- 2; return(c(a,z)) }
+    m(); a
+    
+    a <- 1; b <- 2
+    f<-function(x){ a*x + b }
+    g<-function(x){ a <<- 2; b <- 1; f(x) }
+    g(2)
+
+```
+
 
 ## FOR statement
 
-Often, we want to loop through a set number of items or do a task a predetermined length of time.
+Often, we want to loop through a set number of items or do a task a predetermined length of time.  Can add additional controls via **break** and **next**.  To get help on functions type ?"for"
+
+```{r echo=T, eval=T, cache=T}
+    Iter <- 5
+    cumIndex <- 0
+    for(i in 1:Iter){
+        cumIndex <- cumIndex + 1
+    }
+    print(cumIndex)
+
+```
 
 ## If ELSE statement
 
@@ -141,10 +184,50 @@ A powerful addition to any program is the ability to change the course of the pr
 
 ```{r eval=T, echo=T}
     for(i in 1:10){
-        if(i %% 2 ==1){
+        if(i %% 2 == 1){
             print(paste0("i=",i," is odd"))
         }
     }
 ```
+
+## While loop
+
+A while loop can be thought of as a combination of a for loop and an if statement.  Do until condition is true.
+
+```{r eval=T, echo=T}
+    dummyVar=0
+    while(dummyVar<10){
+        dummyVar = dummyVar + 1
+    }
+```
+
+## Timing
+
+As you start to make functions, it is a good idea to think about how long things take.
+
+Really good blog on this here:  <https://www.r-bloggers.com/5-ways-to-measure-running-time-of-r-code/>
+
+Consider the following code and timings:
+
+```{r echo=T, eval=F, cache=F,tidy=T}
+
+    library("microbenchmark")
+    ##takes a vector and a value, determines if the elements of the vector are to the right/left
+    left_right1<-function(x = c(0.1,0.9), bar = 0.5){
+        temp<-NULL
+        for(i in seq_along(x)){
+            temp[i] <- (x[i]>bar)*1
+        }
+        return(temp)
+    }
+    left_right2 <- function(x = c(0.1,0.9), bar = 0.5){
+        ifelse(x>bar,1,0)
+    }
+    x1<-rnorm(n = 1000,mean=0.5)
+    microbenchmark(result1<-left_right1(x=x1),result2<-left_right2(x=x1),times = 100, unit = "ms")
+    identical(result1, result2)
+```
+
+
 
 ## Homework 3
