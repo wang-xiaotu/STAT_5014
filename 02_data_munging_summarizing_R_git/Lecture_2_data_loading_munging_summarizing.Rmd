@@ -154,7 +154,7 @@ issue | examples
 :-----|:-------
 missing values | recorded as "-", "NA","0"
 jagged arrays | missing fields  
-inconsistent data coding | 2017-01-22 vs 01-22-2017 
+inconsistent data coding | 2017-01-22 vs 01-22-2017 vs Jan 22, 2017
 line termination | platform inconsistencies
 field delimiter issues | csv has data values that use commas  
   

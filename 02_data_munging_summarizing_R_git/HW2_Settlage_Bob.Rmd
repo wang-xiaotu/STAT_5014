@@ -1,0 +1,312 @@
+---
+title: "Stat 5014 HW2"
+author: "Bob Settlage"
+date: '`r Sys.Date()`'
+output:
+  pdf_document: default
+  fig_caption: yes
+  fig_height: 6
+  fig_width: 7
+  classoption: landscape
+header-includes: \setlength\parindent{24pt} \usepackage{MnSymbol} \usepackage{mathrsfs}
+---
+
+```{r setup, include=FALSE, message=F, warning=F}
+    #initialize and load libraries
+    rm(list = ls())   
+    graphics.off()
+    options(scipen = 4, digits = 6)
+    options(stringsAsFactors = FALSE)
+    knitr::opts_chunk$set(echo = F, eval=T, cache=T, tidy.opts=list(width.cutoff=55),
+                tidy=T, include=FALSE, message=F, warning=F)
+    library.warn <- library
+    library <- function(package, help, pos = 2, lib.loc = NULL, character.only = FALSE,
+                        logical.return = FALSE, warn.conflicts = FALSE, quietly = TRUE,
+                        verbose = getOption("verbose")) {
+       if (!character.only) {
+          package <- as.character(substitute(package))
+       }
+       suppressPackageStartupMessages(library.warn(
+          package, help, pos, lib.loc, character.only = TRUE,
+          logical.return, warn.conflicts, quietly, verbose))}
+    #setwd("~/Google Drive/Projects/....")
+
+    #install.packages("scatterplot3d")
+    #library(scatterplot3d)
+    #install.packages("car")
+    #library(car)
+    #library(doParallel)
+    #setup parallel backend to use 7 processors
+    #no_cores <- detectCores() - 2
+    #cl<-makeCluster(no_cores)
+    #registerDoParallel(cl)
+    #stopCluster(cl)
+    #library(MASS)
+    #library(RColorBrewer)
+    #library(plot3D)
+    #install.packages("tidyverse") ##kinda overkill, only need dplyr and tidyr
+    library(tidyverse)
+    library(beeswarm)
+    library(stargazer)
+    library(data.table)
+    library(lubridate)
+```
+
+```{r misc_function}
+# A function for captioning and referencing images
+# figure captions are a pain IMO, I don't remember where I got this from but it may be referenced here: 
+##https://rpubs.com/ajlyons/autonumfigs
+
+fig <- local({
+    i <- 0
+    ref <- list()
+    list(
+        cap=function(refName, text) {
+            i <<- i + 1
+            ref[[refName]] <<- i
+            text
+        },
+        ref=function(refName) {
+            ref[[refName]]
+        })
+})
+#cat("\n\n\\pagebreak\n")
+```
+
+#Problem 4
+
+Version control can assist in:
+
+\begin{itemize}
+    \item first thought  
+    \item second thought  
+    \item third thought
+\end{itemize}
+
+\noindent The last way to make lists was more explicit and offers more control, but sometimes you just want a simple list or are targeting html so do it this way (note blank line and two spaces are important):  
+
+* another way  
+* list item  
+* list item
+
+#Problem 5
+
+Here we will read in, clean and filter datasets with the final goal of creating tidy datasets.  I am going to create a figure for each one to play with plotting functions.
+
+##CMM data
+
+First, we will read in and create a tidy dataset.  After tidying, a summary is in Table 1 with a boxplot in Figure 1.  I will put this code in an Appendix.
+```{r Problem5_CMM_analysis, echo=F, eval=T}
+    ########################### 
+    #Problem5_CMM_analysis  
+    #get data  
+    ########################### 
+    url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/CMM.dat"
+    CMM_raw<-read.table(url, header=F, skip=1, fill=T, stringsAsFactors = F)
+    CMM_tidy<-CMM_raw[-1,]
+    colnames(CMM_tidy)<-c("part","Op1_1","Op1_2","Op2_1","Op2_2")
+    CMM_tidy<-CMM_tidy %>%  
+        gather(op_rep,value,Op1_1:Op2_2) %>%  
+        separate(op_rep,into=c("operator","replicate"),sep="_") %>%  
+        mutate(operator = gsub("Op","",operator)) %>%  
+        mutate(replicate = as.numeric(replicate)) %>%  
+        mutate(part = as.numeric(part))
+    ########################### 
+    
+```
+
+
+```{r CMM_table, echo=F, include=T, eval=T, results='asis'}
+    knitr::kable(summary(CMM_tidy), caption="CMM data summary")
+```
+
+
+```{r problem5_CMM_fig1, eval=T, echo=F, cache=F, include=T, results='asis', fig.cap=fig$cap("plot1","CMM data, boxplot by operator, color by replicate, label is part number."),fig.width=5, fig.height=5, fig.align="center"}  
+    ########################### 
+    #Problem5_CMM_analysis  
+    #plot  
+    ########################### 
+    boxplot(value~operator, data=CMM_tidy, xlab="Operator")
+    beeswarm(value~operator, data=CMM_tidy, pwcol=CMM_tidy$replicate,pwpch=as.character(CMM_tidy$part),add=T)
+    legend("topleft",legend = levels(as.factor(CMM_tidy$replicate)),pch=20,col=levels(as.factor(CMM_tidy$replicate)))
+
+```
+
+Finally, lets create a quick linear model to play with tables.  Note, this analyis is not technically correct, you will learn more about why in the Design of Experiments class.  We will use this model:
+
+\begin{equation}
+y_i=intercept+part_i+operator_i+\epsilon_i
+\end{equation}
+
+```{r quick_dirty, eval=T, echo=F, include=T, results='asis'}
+
+    CMM_tidy_lm<-lm(value~as.factor(part)+as.factor(operator),data=CMM_tidy)
+    stargazer(CMM_tidy_lm,title = "Playing with tables",header = F,no.space=T,single.row=T)
+```
+  
+```{r,eval=F,echo=F}
+    z<-matrix(rnorm(8000*8000),nrow=8000,ncol=8000)
+    system.time(solve(z))
+```
+\newpage  
+
+#Now for the actual homework:
+#Problem 5
+
+##Part A: Sensory data
+
+```{r Problem5_Sensory_analysis, echo=F, eval=T}
+    ########################### 
+    #Problem5_Sensory_analysis  
+    #get data  
+    ########################### 
+    url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/Sensory.dat"
+    Sensory_raw<-read.table(url, header=F, skip=1, fill=T, stringsAsFactors = F)
+    Sensory_tidy<-Sensory_raw[-1,]
+    Sensory_tidy_a<-filter(.data = Sensory_tidy,V1 %in% 1:10) %>%
+                    rename(Item=V1,V1=V2,V2=V3,V3=V4,V4=V5,V5=V6)
+    Sensory_tidy_b<-filter(.data = Sensory_tidy,!(V1 %in% 1:10)) %>%
+                    mutate(Item=rep(as.character(1:10),each=2)) %>%
+                    mutate(V1=as.numeric(V1)) %>%
+                    select(c(Item,V1:V5))
+    Sensory_tidy<-bind_rows(Sensory_tidy_a,Sensory_tidy_b)
+    colnames(Sensory_tidy)<-c("Item",paste("Person",1:5,sep="_"))
+    Sensory_tidy<-Sensory_tidy %>%  
+        gather(Person,value,Person_1:Person_5) %>%  
+        mutate(Person = gsub("Person_","",Person)) %>%
+        arrange(Item)
+    
+    ########################### 
+    
+```
+
+```{r Sensory_table, echo=F, include=T, eval=T, results='asis'}
+    knitr::kable(summary(Sensory_tidy), caption="Sensory data summary")
+```
+
+##Part B: Long Jump data
+
+```{r Problem5_LongJump_analysis, echo=F, eval=T}
+    ########################### 
+    #Problem5_LongJump_analysis  
+    #get data  
+    ########################### 
+    url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/LongJumpData.dat"
+    LongJump_raw<-read.table(url, header=F, skip=1, fill=T, stringsAsFactors = F)
+    colnames(LongJump_raw)<-rep(c("V1","V2"),4)
+    LongJump_tidy<-rbind(LongJump_raw[,1:2],LongJump_raw[,3:4],
+                             LongJump_raw[,5:6],LongJump_raw[,7:8])
+    LongJump_tidy<-LongJump_tidy %>%  
+        filter(!(is.na(V1))) %>%
+        mutate(YearCode=V1, Year=V1+1900, dist=V2) %>%
+        select(-V1,-V2)
+    
+    ########################### 
+    
+```
+
+```{r LongJump_table, echo=F, include=T, eval=T, results='asis'}
+    knitr::kable(summary(LongJump_tidy), caption="Long Jump data summary")
+```
+
+##Part C: Brain vs Body data
+
+```{r Problem5_BrainBody_analysis, echo=F, eval=T}
+    ########################### 
+    #Problem5_BrainBody_analysis  
+    #get data  
+    ########################### 
+    url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/BrainandBodyWeight.dat"
+    BrainBody_raw<-read.table(url, header=F, skip=1, fill=T, stringsAsFactors = F)
+    colnames(BrainBody_raw)<-rep(c("Brain","Body"),3)
+    BrainBody_tidy<-rbind(BrainBody_raw[,1:2],BrainBody_raw[,3:4],
+                             BrainBody_raw[,5:6])
+    BrainBody_tidy<-BrainBody_tidy %>%  
+        filter(!(is.na(Brain))) 
+    
+    ########################### 
+    
+```
+
+```{r BrainBody_table, echo=F, include=T, eval=T, results='asis'}
+    knitr::kable(summary(BrainBody_tidy), caption="Brain/Body weight data summary")
+```
+  
+##Part C: Tomato data
+
+```{r Problem5_Tomato_analysis, echo=F, eval=T}
+    ########################### 
+    #Problem5_Tomato_analysis  
+    #get data  
+    ########################### 
+    url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/tomato.dat"
+    Tomato_raw<-read.table(url, header=F, skip=2, fill=T, stringsAsFactors = F, comment.char = "")
+    Tomato_tidy<-Tomato_raw %>%  
+        separate(V2,into=paste("C10000",1:3,sep="_"),sep=",",remove=T, extra="merge") %>%
+        separate(V3,into=paste("C20000",1:3,sep="_"),sep=",",remove=T, extra="merge") %>%
+        separate(V4,into=paste("C30000",1:3,sep="_"),sep=",",remove=T, extra="merge") %>%
+        mutate(C10000_3=gsub(",","",C10000_3)) %>%
+        gather(Clone,value,C10000_1:C30000_3) %>%
+        mutate(Variety=V1, Clone=gsub("C","",Clone)) %>%
+        mutate(Variety=gsub("\\\\#"," ",Variety)) %>%
+        separate(Clone,into = c("Clone","Replicate")) %>%
+        select(-V1,Variety,Clone,value) %>%
+        arrange(Variety) 
+        
+    ########################### 
+    
+```
+
+```{r Tomato_table, echo=F, include=T, eval=T, results='asis'}
+    knitr::kable(summary(Tomato_tidy), caption="Tomato data summary")
+```
+  
+#Problem 7  
+
+In this problem, we are to munge and create some summary statistics for a large dataset.  Going in, we know this is a large dataset, so I Google'd "read large dataset in r" and came up with
+ <https://rpubs.com/msundar/large_data_analysis> as my top hit.  At 2015, it is a *little* dated, but reading through it, it seems to have some good advice, so I am going to try it and see.  The first suggestion is to read in a little data so that we know can set the column classes, so let's do that on all three datafiles (I downloaded them onto my local drive via wget)
+
+```{r Problem7_Car_analysis, echo=F, eval=T, include=T}
+    ########################### 
+    #Problem7_Car_analysis  
+    #get data  
+    ########################### 
+
+    Car_Gebreken_raw <- read.csv("Open_Data_RDW__Gebreken.csv",stringsAsFactors = F, nrows=200, header=T,quote = '"')
+    Car_Geconstat_raw <- read.csv("Open_Data_RDW__Geconstateerde_Gebreken.csv", stringsAsFactors = F, nrows=200, header=T)
+    Car_Person_raw <- read.csv("Personenauto_basisdata.csv",stringsAsFactors = F, nrows=200, header=T)
+    
+    Car_Gebreken_raw.colclass <- sapply(Car_Gebreken_raw,class)
+    Car_Geconstat_raw.colclass <- sapply(Car_Geconstat_raw,class)
+    Car_Person_raw.colclass <- sapply(Car_Person_raw,class)
+    
+    print("Gebreken")
+    print(Car_Gebreken_raw.colclass)
+
+    print("Geconstat")
+    print(Car_Geconstat_raw.colclass)
+
+    print("Personen")
+    print(Car_Person_raw.colclass)
+    
+```
+
+From the discussion, it looks to me as if the path of least resistance is to use fread and data.tables.  As a cool aside, note that you can print data.tables and it only shows the first and last 5 lines AND if you have too many columns, it only shows what fits to screen.  Data.tables are replacing data.frames.  They are faster to manipulate and offer additional functionality.  Continuing with this problem, I think we should limit the import to only those columns we are interested in to save some space.  We could filter on date (2017) in line, but for this I am thinking we will convert to date and then filter.  Actually, I hate dealing with dates, so I am filtering using grep.
+
+```{r Problem7_munging}
+    #this had the defect code and description
+    Car_Gebreken_select <- fread(input = "Open_Data_RDW__Gebreken.csv", header = T, select=c(1,6), showProgress=F)
+    #this has the license plate, inspection date and defect code
+    Car_Geconstat_select <- fread(input = "Open_Data_RDW__Geconstateerde_Gebreken.csv", header=T, select=c(1,3,5),showProgress=F)
+    #this has the license plate, make and model of vehicle
+    Car_Person_select <- fread(input = "Personenauto_basisdata.csv", header=T, showProgress = F, select = c(1,3,4))
+    
+    Car_Geconstat_select_2017 <- Car_Geconstat_select[grep("2017",Car_Geconstat_select$"Meld datum door keuringsinstantie"),]
+    ########################### 
+    
+```
+  
+#Appendix 1: R code  
+```{r Appendix, ref.label=c("Problem5_CMM_analysis","problem5_CMM_fig1"), echo=TRUE, eval=F, tidy=TRUE, include=T}
+  
+```

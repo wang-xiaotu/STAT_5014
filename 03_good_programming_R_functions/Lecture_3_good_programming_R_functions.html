@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Loading, cleaning and munging data in R, and (some) Git</title>
+  <title>Good programming practices, R functions and logic</title>
 
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -10,7 +10,7 @@
 
 
 
-  <meta name="date" content="2017-09-06" />
+  <meta name="date" content="2017-09-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,7 +21,7 @@
     var SLIDE_CONFIG = {
       // Slide settings
       settings: {
-                title: 'Loading, cleaning and munging data in R, and (some) Git',
+                title: 'Good programming practices, R functions and logic',
                         useBuilds: true,
         usePrettify: true,
         enableSlideAreas: true,
@@ -94,76 +94,26 @@
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2017-09-06</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2017-09-05</p>
           </hgroup>
   </slide>
 
 <slide class=''><hgroup><h2>Today&#39;s Agenda</h2></hgroup><article  id="todays-agenda" class="smaller ">
 
 <ul>
-<li>Review the concepts of Reproducible Research</li>
-<li>Introduce Rprojects and Git</li>
-<li>Importing, cleaning and reformating data</li>
-<li>Summarizing data</li>
-<li>Homework 2</li>
-</ul>
-
-</article></slide><slide class=''><hgroup><h2>Reproducible Research </h2><h3> Review</h3></hgroup><article  id="reproducible-research-review" class="smaller ">
-
-<p>This was the scenario:<br/>You had worked 6 months to analyze a data set. You gave your collaborator the perfect analysis and the results are very exciting. They go away very happy and you don&#39;t hear from them for 1 year. Suddenly, a flurry of emails ensues, they have new data to add to the previous pipeline, they need alterations to your perfect figure, they have lots of how did you questions, they ask you to write a methods section, etc etc. You publish your perfect results. Someone else analyzes the data and comes to <em>different</em> conclusions. Are you sure you didn&#39;t have a bug in your code? How good are your notes???</p>
-
-<p>Answer: <strong><em>Awesome, because you annotated your code with text to create a RR compendium</em></strong></p>
-
-</article></slide><slide class=''><hgroup><h2>Reproducible Research - Concepts</h2></hgroup><article  id="reproducible-research---concepts" class="smaller ">
-
-<p>Guide to this topic here: <a href='http://ropensci.github.io/reproducibility-guide/' title=''>http://ropensci.github.io/reproducibility-guide/</a></p>
-
-<p>In general, we should <strong>weave</strong> code and text into a complete reference of our work. The document should:</p>
-
-<ul>
-<li>download or otherwise load/generate data</li>
-<li>reproduce steps to munge data</li>
-<li>recreate analysis steps</li>
-<li>create figures and tables</li>
-<li>explain any and all steps along the way</li>
-<li>end with conclusions drawn</li>
-<li>optionally add suggestions for future experiments</li>
-</ul>
-
-<p>While the above works well as a record of our analysis steps, we are still missing a method to save, archive our work, and do more interesting things like collaborate and use version control. Perhaps also missing is the ability to sensibly divide our potentially lengthy compendium into smaller compact and re-usable scripts.</p>
-
-</article></slide><slide class=''><hgroup><h2>Introducing Rprojects and git</h2></hgroup><article  id="introducing-rprojects-and-git" class="smaller ">
-
-<p>Rprojects combined with git solves these concerns in one go.</p>
-
-<p>First we will deal with Rprojects.</p>
-
-<p>Rprojects are exactly what they sound like, a group of files, scripts, etc in an organized (hmm, really tracked) directory structure. Essentially, Rstudio is keeping track of files and directories you tell it are within a project.</p>
-
-<p>How do you make an Rproject?? File &#8211;&gt; New Project.</p>
-
-<p>Rprojects enable the use of <em>version control</em> systems like git&#8230;</p>
-
-</article></slide><slide class=''><hgroup><h2>Version Control</h2></hgroup><article  id="version-control" class="smaller ">
-
-<p>What is version control - a system for storing data and tracking changes. There are lots of different flavors:</p>
-
-<ul>
-<li>Git, SVG, Mercural, Perforce, Bazaar, etc etc</li>
-</ul>
-
-<p>In this class, we will use GitHub and make everything public, i.e. free.</p>
-
-<p>One question you are probably asking: &quot;I am just using R for my own assignments, on my own computer, by myself, why should I care about version control?&quot; Two stack overflow threads should help answer this:</p>
-
-<ul>
-<li>Why should I use version control? <a href='http://stackoverflow.com/questions/1408450/why-should-i-use-version-control' title=''>http://stackoverflow.com/questions/1408450/why-should-i-use-version-control</a></li>
-<li>R and version control for the solo data analyst<br/><a href='http://stackoverflow.com/questions/2712421/r-and-version-control-for-the-solo-data-analyst' title=''>http://stackoverflow.com/questions/2712421/r-and-version-control-for-the-solo-data-analyst</a></li>
+<li>Review Git<br/></li>
+<li>Review data cleaning and munging<br/></li>
+<li>Introduce good programming practices<br/></li>
+<li>R functions<br/></li>
+<li>if else</li>
+<li>while loop<br/></li>
+<li>for next<br/></li>
+<li>Homework 3</li>
 </ul>
 
 </article></slide><slide class=''><hgroup><h2>Version Control and Git</h2></hgroup><article  id="version-control-and-git" class="smaller ">
 
-<p>Git is essentially a database of snapshots of the project directory tree. You decide when and what to take snapshots of and if you using GitHub (or similar) when to push a copy to a remote repository.</p>
+<p>Git is essentially a database of snapshots of the project directory tree. You decide what and when to take snapshots of and if you using GitHub (or similar) when to push a copy to a remote repository.</p>
 
 <p>The basic workflow is:</p>
 
@@ -175,8 +125,6 @@
 <li>git <strong>push</strong> to the repository (local or remote)<br/></li>
 <li>repeat</li>
 </ol>
-
-<p>We will tweak this a little to work as a &quot;team&quot;. More instructions in the homework.</p>
 
 </article></slide><slide class=''><hgroup><h2>Git file states</h2></hgroup><article  id="git-file-states" class="smaller ">
 
@@ -193,127 +141,19 @@
 
 <p>From Hadley Wickham &amp; Garrett Grolemund&#39;s R for Data Science <a href='http://r4ds.had.co.nz' title=''>http://r4ds.had.co.nz</a><br/><img src='data:image/png;base64,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' title=''/></p>
 
-<p>Today we focus on getting and cleaning the data.</p>
+<p>Our first job is usally to get and &quot;tidy&quot; the data.</p>
 
-</article></slide><slide class=''><hgroup><h2>Data wrangling</h2></hgroup><article  id="data-wrangling" class="smaller ">
+</article></slide><slide class=''><hgroup><h2>Tidy Data</h2></hgroup><article  id="tidy-data" class="smaller ">
 
-<p>Data wrangling or munging is the process of going from raw to useful data format. This can be 60-80% of the time spent on a project. Steps may include any or all of the following:</p>
-
-<table class = 'rmdtable'>
-<col width="15%" />
-<col width="36%" />
-<tr class="header">
-<th align="left">Step</th>
-<th align="left">Examples</th>
-</tr>
-<tr class="odd">
-<td align="left"><p>Import</p></td>
-<td align="left"><ul>
-<li>read.table(html,json)</li>
-</ul></td>
-</tr>
-<tr class="even">
-<td align="left"><p>Clean</p></td>
-<td align="left"><ul>
-<li>filter and subset</li>
-<li>standardize</li>
-<li>renaming</li>
-<li>type conversions</li>
-</ul></td>
-</tr>
-<tr class="odd">
-<td align="left"><p>Reformat</p></td>
-<td align="left"><ul>
-<li>merging</li>
-<li>reshaping</li>
-<li>aggregating</li>
-</ul></td>
-</tr>
-</table>
-
-</article></slide><slide class=''><hgroup><h2>Data wrangling &#8211; import data</h2></hgroup><article  id="data-wrangling----import-data" class="smaller ">
-
-<ul>
-<li>load internal dataset</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>    library(help = &quot;datasets&quot;)
-    ?PlantGrowth</pre>
-
-<ul>
-<li>copy and paste<br/></li>
-<li>load file
-
-<ul>
-<li>local<br/></li>
-<li>web</li>
-</ul></li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>    ?read.table; ?read.csv
-    url&lt;-&quot;http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/onewaymuzzle.dat&quot;
-    chp2_muzzle&lt;-read.table(url,header=T)
-    #google &quot;how to get data into R&quot;</pre>
-
-<ul>
-<li>generate data</li>
-</ul>
-
-<pre class = 'prettyprint lang-r'>    set.seed(123456)
-    coin_flips&lt;-rbinom(n = 1000,size = 1, prob = .501)</pre>
-
-</article></slide><slide class=''><hgroup><h2>Data wrangling - cleaning</h2></hgroup><article  id="data-wrangling---cleaning" class="smaller ">
-
-<p>Getting data into R is <em><strong>usually</strong></em> not the problem, often the fun starts when we start to actually look at what we were given. Common issues:</p>
-
-<table class = 'rmdtable'>
-<tr class="header">
-<th align="left">issue</th>
-<th align="left">examples</th>
-</tr>
-<tr class="odd">
-<td align="left">missing values</td>
-<td align="left">recorded as &quot;-&quot;, &quot;NA&quot;,&quot;0&quot;</td>
-</tr>
-<tr class="even">
-<td align="left">jagged arrays</td>
-<td align="left">missing fields</td>
-</tr>
-<tr class="odd">
-<td align="left">inconsistent data coding</td>
-<td align="left">2017-01-22 vs 01-22-2017 vs Jan 22, 2017</td>
-</tr>
-<tr class="even">
-<td align="left">line termination</td>
-<td align="left">platform inconsistencies</td>
-</tr>
-<tr class="odd">
-<td align="left">field delimiter issues</td>
-<td align="left">csv has data values that use commas</td>
-</tr>
-</table>
-
-<p>And pretty much any other issue you might imagine.</p>
-
-</article></slide><slide class=''><hgroup><h2>Data wrangling - reformatting/standardizing</h2></hgroup><article  id="data-wrangling---reformattingstandardizing" class="smaller ">
-
-<p>Now that we have the data in R, we need to get it into a useable format. One idea for a set of standards for structuring a data set is to create a so called &quot;tidy&quot; data set.</p>
+<p>We have multiple ways to get data into R. We now have to get it into a useable format. Tidy.</p>
 
 <p><a href='http://vita.had.co.nz/papers/tidy-data.html' title=''>http://vita.had.co.nz/papers/tidy-data.html</a></p>
 
-<p>Essentially, we need to reformat the data such that:</p>
+<p>Messy:<br/>- Column headers are values, not variable names.<br/>- Multiple variables are stored in one column.<br/>- Variables are stored in both rows and columns.<br/>- Multiple types of observational units are stored in the same table.<br/>- A single observational unit is stored in multiple tables.</p>
 
-<ol>
-<li>Each variable forms a column.<br/></li>
-<li>Each observation forms a row.<br/></li>
-<li>Each type of observational unit forms a table.</li>
-</ol>
+<p>Tidy:<br/>1. Each variable forms a column.<br/>2. Each observation forms a row.<br/>3. Each type of observational unit forms a table.</p>
 
-<p>Any other structure to the data is considered messy. Sound easy?</p>
-
-</article></slide><slide class=''><hgroup><h2>Data wrangling - reformatting</h2></hgroup><article  id="data-wrangling---reformatting" class="smaller ">
-
-<p>OK, what is wrong with this?</p>
+</article></slide><slide class=''><hgroup><h2>Messy &#8212;&gt; Tidy :)</h2></hgroup><article  id="messy-----tidy" class="smaller ">
 
 <table class = 'rmdtable'>
 <tr class="header">
@@ -337,23 +177,6 @@
 <td align="right">1</td>
 </tr>
 </table>
-
-<p>What we want is something more akin to a model:</p>
-
-<p>\[
-y_i = x_{i1} + x_{i2} ...
-\]</p>
-
-</article></slide><slide class=''><hgroup><h2>Data wrangling - tidy example</h2></hgroup><article  id="data-wrangling---tidy-example" class="smaller ">
-
-<pre class = 'prettyprint lang-r'>    library(tidyr,quietly=T,warn.conflicts=F)
-    library(dplyr,quietly=T,warn.conflicts=F)
-    tidy_data1_df&lt;-messy_data1_df %&gt;%
-                    mutate(names=rownames(messy_data1_df)) %&gt;%
-                    gather(treatment,value,treatmenta:treatmentb) %&gt;%
-                    mutate(treatment=gsub(&quot;treatment&quot;,&quot;&quot;,treatment),
-                           value=readr::parse_number(value))
-    knitr::kable(tidy_data1_df,format = &quot;markdown&quot;, caption=&quot;Tidy Data&quot;)</pre>
 
 <table class = 'rmdtable'>
 <tr class="header">
@@ -393,114 +216,80 @@ y_i = x_{i1} + x_{i2} ...
 </tr>
 </table>
 
-</article></slide><slide class=''><hgroup><h2>Data wrangling - base R</h2></hgroup><article  id="data-wrangling---base-r" class="smaller ">
+</article></slide><slide class=''><hgroup><h2>Good Programming Practices</h2></hgroup><article  id="good-programming-practices" class="smaller ">
 
-<p>The point in data munging is efficiently transforming and cleaning data to bring it into a usable state. In the example above, we saw functions from <em>plyr</em> and <em>tidyr</em> (look up <em>tidyverse</em>) used for to create a data &quot;pipeline&quot;. You may find other solutions that suit you better.</p>
+<p>Now that we have the data in a nice format, we need to analyze it. Most analysis will require some amount of programming. As we program, we should strive to create readable and reusable code. The art of creating good code is captured in the broad and opinionated topic of Good Programming Practices. There are many ideas about what constitues good. You will devolop your own style, but it would be good to start with some guidance from some experts.</p>
 
-<pre class = 'prettyprint lang-r'>    tidy_data1_df&lt;-cbind(messy_data1_df,names=rownames(messy_data1_df))
-    tidy_data1_df&lt;-rbind(tidy_data1_df,tidy_data1_df)
-    tidy_data1_df[4:6,1]&lt;-tidy_data1_df[4:6,2]
-    tidy_data1_df$treatmentb&lt;-rep(c(&quot;a&quot;,&quot;b&quot;),each=3)
-    colnames(tidy_data1_df)&lt;-c(&quot;value&quot;,&quot;treatment&quot;,&quot;names&quot;)
-    rownames(tidy_data1_df)&lt;-NULL
-    tidy_data1_df&lt;-tidy_data1_df[,c(3,2,1)]
-    tidy_data1_df$value&lt;-as.numeric(tidy_data1_df$value)</pre>
+<p>Google&#39;s R Style Guide <a href='https://google.github.io/styleguide/Rguide.xml' title=''>https://google.github.io/styleguide/Rguide.xml</a><br/>Hadley Wickam&#39;s Style Guide: <a href='http://r-pkgs.had.co.nz/style.html' title=''>http://r-pkgs.had.co.nz/style.html</a></p>
 
-</article></slide><slide class=''><hgroup><h2>Data wrangling - messy data symptoms</h2></hgroup><article  id="data-wrangling---messy-data-symptoms" class="smaller ">
+</article></slide><slide class=''><hgroup><h2>Good Programming Practices cont</h2></hgroup><article  id="good-programming-practices-cont" class="smaller ">
+
+<p>Remember: ultimate goal is Reproducible Research.<br/>To enable this, we need well documented (annotated) readable code.</p>
+
+<ol>
+<li>variable/object names
 
 <ul>
-<li>Column headers are values, not variable names.</li>
-<li>Multiple variables are stored in one column.</li>
-<li>Variables are stored in both rows and columns.</li>
-<li>Multiple types of observational units are stored in the same table.<br/></li>
-<li>A single observational unit is stored in multiple tables.</li>
-</ul>
+<li>nouns describing what the object holds, e.g. originaData instad of d<br/></li>
+<li>DO NOT use existing variables or functions, e.g. T&lt;-1000</li>
+</ul></li>
+<li>function formation
 
-</article></slide><slide class=''><hgroup><h2>Data wrangling - summarizing and tables</h2></hgroup><article  id="data-wrangling---summarizing-and-tables" class="smaller ">
+<ul>
+<li>function names should be verb associated with the function purpose<br/></li>
+<li>comment both function purpose and required arguments<br/></li>
+<li>arguments should have defaults (my personal and often not followed preference)</li>
+<li>my preference is to explicitly return a value<br/></li>
+</ul></li>
+<li>commenting rules
 
-<p>There are many useful metrics to capture. At a high level, here we really are most concerned with metrics associated with the data structure, i.e. number of observations, missing values, data types etc. R has a function for that&#8230; :)</p>
+<ul>
+<li>comment your code!! &#39;nough said?<br/></li>
+</ul></li>
+<li>indent within logical blocks of code !!
 
-<pre class = 'prettyprint lang-r'>    ?str
-    ?summary</pre>
-
-<p>To print the table in a document, we have several options. My current favorites are kable and stargazer. Other community tools include <strong>Pander</strong> and <strong>xtable</strong>. Use kable by:</p>
-
-</article></slide><slide class=''><hgroup><h2>Data wrangling - Tidy summary</h2></hgroup><article  id="data-wrangling---tidy-summary" class="smaller ">
-
-<pre class = 'prettyprint lang-r'>    knitr::kable(summary(tidy_data1_df),caption=&quot;Tidy Data Summary&quot;)</pre>
-
-<table class = 'rmdtable'>
-<caption>Tidy Data Summary</caption>
-<tr class="header">
-<th align="left"></th>
-<th align="center">names</th>
-<th align="center">treatment</th>
-<th align="center">value</th>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="center">Length:6</td>
-<td align="center">Length:6</td>
-<td align="center">Min. : 1.0</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="center">Class :character</td>
-<td align="center">Class :character</td>
-<td align="center">1st Qu.: 2.0</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="center">Mode :character</td>
-<td align="center">Mode :character</td>
-<td align="center">Median : 3.0</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">Mean : 6.6</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">3rd Qu.:11.0</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">Max. :16.0</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="center">NA</td>
-<td align="center">NA</td>
-<td align="center">NA&#39;s :1</td>
-</tr>
-</table>
-
-</article></slide><slide class=''><hgroup><h2>Good practices note</h2></hgroup><article  id="good-practices-note" class="smaller ">
-
-<p>If you are getting data from the internet, it is a good idea to protect against:</p>
-
-<ol>
-<li>data source being down<br/></li>
-<li>data source being changed<br/></li>
-<li>other unknown issues</li>
+<ul>
+<li>indenting improves the readability of the code by orders of magnetute!</li>
+</ul></li>
 </ol>
 
-<p>I generally pull the data down, then save the data to a .Rds file. My project includes:</p>
+</article></slide><slide class=''><hgroup><h2>Functions</h2></hgroup><article  id="functions" class="smaller ">
 
-<ol>
-<li>commented code used to pull data down<br/></li>
-<li>commented code used to save data<br/></li>
-<li>code to read data into R from the saved file<br/></li>
-<li>AND often project image files as mid-stream checkpoints</li>
-</ol>
+<pre class = 'prettyprint lang-r'>    dataA&lt;-1;dataB&lt;-2
+    computeMean&lt;-function(x=3,y=5){
+        # quick function to compute the mean of two numbers, x and y
+        # x and y should be numeric
+        # returns numeric mean
+        #should put some error checks in here, what if x || y are not numeric??
+        return(mean(c(x,y)))
+    }
+    computeMean(x=dataA,y=dataB)</pre>
 
-</article></slide><slide class=''><hgroup><h2>Homework 2</h2></hgroup><article  id="homework-2" class="smaller "></article></slide>
+<pre >## [1] 1.5</pre>
+
+<p>Note that our function definition includes passing in ALL necessary data. If we do not do this, we can have MAJOR issues with variable scope that is often difficult to troubleshoot.</p>
+
+</article></slide><slide class=''><hgroup><h2>FOR statement</h2></hgroup><article  id="for-statement" class="smaller ">
+
+<p>Often, we want to loop through a set number of items or do a task a predetermined length of time.</p>
+
+</article></slide><slide class=''><hgroup><h2>If ELSE statement</h2></hgroup><article  id="if-else-statement" class="smaller ">
+
+<p>A powerful addition to any program is the ability to change the course of the program as conditions change. In R, one such flow change statement is the if else statement.</p>
+
+<pre class = 'prettyprint lang-r'>    for(i in 1:10){
+        if(i %% 2 ==1){
+            print(paste0(&quot;i=&quot;,i,&quot; is odd&quot;))
+        }
+    }</pre>
+
+<pre >## [1] &quot;i=1 is odd&quot;
+## [1] &quot;i=3 is odd&quot;
+## [1] &quot;i=5 is odd&quot;
+## [1] &quot;i=7 is odd&quot;
+## [1] &quot;i=9 is odd&quot;</pre>
+
+</article></slide><slide class=''><hgroup><h2>Homework 3</h2></hgroup><article  id="homework-3" class="smaller "></article></slide>
 
 
   <slide class="backdrop"></slide>
