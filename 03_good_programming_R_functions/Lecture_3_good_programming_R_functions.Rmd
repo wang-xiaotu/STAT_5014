@@ -47,6 +47,22 @@ The basic workflow is:
 
 ![Git file lifecycle](git_file_lifecycle.png)
 
+## Git fork setup
+
+Note that our setup is a little more complex in that we have two remote and local repositories.  Thinking about what is visible to your system, we have the below.  What makes this difficult is the fact that I keep changing the original repo as I add homework etc.  This requires some additional steps.
+
+<div class="columns-2">
+
+```{r, out.height="400px",out.width="350px",eval=T, echo=F}
+    knitr::include_graphics("git_fork_remote_config.png")
+```
+
+git remote add upstream <https://github.com/rsettlage/STAT_5014.git>
+git fetch upstream
+git checkout master
+git merge upstream/master
+
+
 ## Back to Reproducible Research Analysis
 
 From Hadley Wickham & Garrett Grolemund's R for Data Science 
@@ -158,7 +174,7 @@ While we are at it, r-bloggers has many useful tidbits. <https://www.r-bloggers.
     
     a <- 1; b <- 2
     f<-function(x){ a*x + b }
-    g<-function(x){ a <<- 2; b <- 1; f(x) }
+    g<-function(x){ a <<- 2; b <- 1; print(objects()); f(x) }
     g(2)
 
 ```
