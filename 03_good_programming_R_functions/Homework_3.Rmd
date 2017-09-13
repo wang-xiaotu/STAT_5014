@@ -101,7 +101,10 @@ d. report how many DIFFERENT makes and models of cars you end with (?unique ?dis
 e. report a table of the 5 most frequent defects (translated) and the top make/models having that defect (?count) again considering only year 2017  
 f. use function lm to test for a relationship between number of defects observed by make, report both the coefficient and anova tables (2017 only)  
 g. repeat (f) by model (2017 only)  
-g. comment on this workflow and how you might be more computationally efficient
+h. comment on this workflow and how you might be more computationally efficient
+
+Note this post for table issues:  
+<https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf>
 
 ## Problem 10
 
