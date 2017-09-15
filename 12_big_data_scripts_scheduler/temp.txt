@@ -1,4 +1,0 @@
-total 0
-drwxr-xr-x   3 rsettlag  staff   102B Sep 15 09:47 .
-drwxr-xr-x  32 rsettlag  staff   1.1K Sep 12 21:33 ..
--rw-r--r--   1 rsettlag  staff     0B Sep 15 09:47 temp.txt

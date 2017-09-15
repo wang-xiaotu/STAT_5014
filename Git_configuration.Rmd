@@ -59,7 +59,8 @@ In Github, you will want to “fork” my class repo.
 If you type this, you should get output as shown:  
 
 ```{r echo=T, eval=F}
-git remote add upstream <https://github.com/rsettlage/STAT_5014.git>
+
+git remote add upstream https://github.com/rsettlage/STAT_5014.git
 git remote -v ###this should give the following output
 origin    https://github.com/YOUR_USERNAME/YOUR_FORK.git (fetch)
 origin    https://github.com/YOUR_USERNAME/YOUR_FORK.git (push)
