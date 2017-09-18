@@ -1,0 +1,4 @@
+#this needs reformatting to read into Splus
+                      10000              20000     30000
+Ife\#1           16.1,15.3,17.5   16.6,19.2,18.5   20.8,18.0,21.0
+PusaEarlyDwarf   8.1,8.6,10.1,    12.7,13.7,11.5   14.4,15.4,13.7 

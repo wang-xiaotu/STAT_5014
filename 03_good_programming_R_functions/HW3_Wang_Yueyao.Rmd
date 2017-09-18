@@ -1,0 +1,37 @@
+---
+title: "Homework 3"
+author: "Yueyao Wang"
+date: "September 16, 2017"
+output: pdf_document
+---
+
+### Problem 4  
+
+There are some programming skills in notations, syntax, functions and organisation to make code clean and clear:  
+
+- Using lowercase and underscore in the variable names
+- Placing spaces around operators and before left parentheses, except in a function call.
+- The opening curly brace should never go on its own line and should always followed by a new line. A closing curly brace should always go on its own line, unless it's followed by else.
+- Each lines shouldn't exceed 80 characters.
+- When function definition runs over multiple lines, indent the second line where the definition starts.
+- Commenting code and use - or = to seperate code into readable chunks.  
+
+I will pay attention to improve the identation and comments.  
+
+### Problem 5  
+```{r,eval=FALSE}
+library(lintr)
+lint(filename = "../02_data_munging_summarizing_R_git/HW2_Wang_Yueyao.Rmd")
+```   
+
+- Pay attention that lines shouldn't more than 80 characters.
+- Variable and function names should be all lowercase.
+- Only use double-quotes for text.
+- Commas should always have a space after.
+
+### Problem 6  
+```{r}
+
+```
+
+
