@@ -5,6 +5,21 @@ date: "September 16, 2017"
 output: pdf_document
 ---
 
+```{r setup, include=FALSE, message=F, warning=F}
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(data.table)
+library(tidyr)
+library(readr)
+library(stringr)
+library(kableExtra)
+library(stargazer)
+knitr::opts_chunk$set(echo = F, eval=T, cache=T, tidy.opts=list(width.cutoff=55),
+                tidy=T, message=F, warning=F)
+```
+
+
 ### Problem 4  
 
 There are some programming skills in notations, syntax, functions and organisation to make code clean and clear:  
@@ -19,7 +34,7 @@ There are some programming skills in notations, syntax, functions and organisati
 I will pay attention to improve the identation and comments.  
 
 ### Problem 5  
-```{r,eval=FALSE}
+```{r,echo=TRUE, eval=FALSE}
 library(lintr)
 lint(filename = "../02_data_munging_summarizing_R_git/HW2_Wang_Yueyao.Rmd")
 ```   
@@ -30,8 +45,244 @@ lint(filename = "../02_data_munging_summarizing_R_git/HW2_Wang_Yueyao.Rmd")
 - Commas should always have a space after.
 
 ### Problem 6  
-```{r}
 
+- The table containing means, sds and correlations of 13 observers is following:
+```{r Problem6_table, fig.align='center', fig.width = 5, fig.height=3.5}
+####### Problem6: construct summarise function and table############
+data <- readRDS("./HW3_data.rds")
+#--------------------Construct functions---------------------------------------
+#input: x is a dataframe for all samples from 1 Observer
+#return:a dataframe of descriptive statstics
+descrip_stats <- function(x){
+  mean_dev1_dev2 <- apply(x,MARGIN = 1,FUN = mean)
+  sd_dev1_dev2 <- apply(x,MARGIN = 1,FUN = sd)
+  correlation <- cor(x[,2],x[,3])
+  d <- data.frame("mean_dev1" = mean_dev1_dev2[1],
+                  "mean_dev2" = mean_dev1_dev2[2],
+                  "sd_dev1" = sd_dev1_dev2[1],
+                  "sd_dev2" = sd_dev1_dev2[2],
+                  "correlation" = correlation)
+  return(d)
+}
+#----------loop through the Observers via the descrip_stats function-----------
+obs_1 <- data[data$Observer == 1,]
+com_df <- descrip_stats(obs_1)
+for(i in 2:13){
+  obs_i <- data[data$Observer == i,]
+  des_df <- descrip_stats(obs_i)
+  com_df <- rbind(com_df,des_df)
+}
+rownames(com_df) <- paste("Observer",1:13,sep = "")
+kable(com_df,caption = "Summary of data by Obersvers",digits = 4) %>% 
+  kable_styling(full_width = T)
 ```
+
+- The boxplot of mean for device1 and device2 is following:  
+
+```{r Problem6_mean, fig.align='center', fig.width = 5, fig.height=3.5}
+#-------------create boxplot for dev1 and dev2 mean-------------------------------
+device_mean <- c(com_df[,1],com_df[,2])
+device_index <- rep(c(1,2),each = 13)
+mean_summary <- data.frame("mean" = device_mean,
+                           "device" = as.factor(device_index))
+ggplot(data = mean_summary, aes(x = device, y = mean), main = "boxplot of the device mean") + 
+  geom_boxplot()
+```  
+
+- The violin plot of sd for device1 and device2 is following: 
+
+```{r Problem6_sd, fig.align='center', fig.width = 5, fig.height=3.5}
+#----------------create violin plot fro dev1 and dev2 sd-------------------------------
+device_sd <- c(com_df[,3],com_df[,4])
+sd_summary <- data.frame("sd" = device_sd,
+                           "device" = as.factor(device_index))
+ggplot(data = sd_summary, aes(x = device, y = sd), main = "violin plot for standard deviation") + 
+  geom_violin() +
+  stat_summary(fun.y = mean, geom = "point", color = "red", size = 2)
+
+```  
+
+### Problem 7  
+**The issue with this dataset is that:  **
+
+- Column headers are values: the columns Devs and Docs in the original dataset should be the value of a variable that indicating the pressure read by devices or doctors.  
+- Multiple variables are stored in one column: Also we should have a variable of ID number indicating which device or doctors read this value, not combining them togehter.   
+
+**So I would like to clean and munge the data into 4 variables:  **
+
+- Day: the day recording those values
+- Type: indicating the value is read by doctor or device
+- ID: indicating which device or doctor read this value
+- Pressure: the corresponding blood pressure  
+
+**The tidying process:  **
+
+- Use the gather function to convert those columns header Devs and Docs into a variable read_by_type
+- Separate this characters and numbers in read_by_type variable into two columns Type and ID via mutate and gsub function
+- Select the columns that we want to keep and arrange the rows by the ascending order of Day
+
+So the first 10 rows of the tidy data is following:
+```{r Problem7}
+######## Problem 7 Cleaning Blood Pressure Data #################
+#----------------load the data-------------------------------
+url<-"http://www2.isye.gatech.edu/~jeffwu/wuhamadabook/data/BloodPressure.dat"
+blood_pressure_raw<-read.table(url, header=T, skip=1, fill=T, stringsAsFactors = F)
+#--------------- tidying -------------------------
+blood_pressure <-  blood_pressure_raw %>% 
+  gather(read_by_type, pressure, c(Dev1:Dev3,Doc1:Doc3)) %>%
+  mutate(type = gsub("[[:digit:]]","",read_by_type), ID = parse_number(read_by_type))  %>%
+  select(Day,type,ID,pressure) %>%
+  arrange(Day)
+#------------------show in a table--------------------------------------
+kable(head(blood_pressure,10),caption = "10 Rows of Blood Pressure Data after Tidying") %>%
+  kable_styling(full_width = T)
+```  
+
+### Problem 8  
+We need to calculate the derivative function of $f(x)$ in the Newton's method which is:  
+$$f^{'}(x) = 3^x log(3) - cos(x) - 5sin(5x) $$
+
+####The procedure Newton's method is following:  
+set initial value of x denoted as $x_0$ and tolerance $\epsilon$  
+\textbf{repeat:}  
+\  update $x_{new} = x_0 - f(x_0)/f^{'}(x_0)$  
+\textbf{until} $|x_0 - x_{new}| \leq \epsilon$  
+
+Before directly applying this method, we can plot this function to choose an initial value. Because a bad initial point is easy to cause unconvergency.    
+
+```{r Problem8_Plot,fig.align='center',fig.width=5,fig.height=4}
+######## Problem 8:Plot the function to choose initial value #########
+f <- function(x){
+  value <- 3^x - sin(x) + cos(5 * x)
+  return(value)
+}
+x <- seq(-5,1,by = 0.01)
+plot(x,f(x),main = "f(x)", type = "l")
+abline(h = 0, col = "red")
+```  
+
+From the above plot we could see that there isn't unique root for this function because the trigonometric function. We can just find the biggest negative root in this problem which is between -3 and -2 from the plot.
+```{r Problem8_function,fig.align='center',fig.height=4,fig.width=5}
+######## Problem 8: Construct the function ########
+derv_f <- function(x){
+  value <- 3^x * log(3) - cos(x) - 5 * sin(5 * x)
+  return(value)
+}
+## input: initial value: set it as -3 default
+##        tolerance: 1e-5 as the default
+## output: a vector of the updates of beta at each iteration
+newton_method <- function(epsilon = 1e-5, beta_0 = -3){
+  beta <- c(beta_0)
+  while (TRUE){
+    beta_new <- beta_0 - f(beta_0)/derv_f(beta_0)
+    beta <- c(beta, beta_new)
+    if (abs(beta_new - beta_0) < epsilon){
+      beta_est <- beta_new
+      break
+    } else {
+      beta_0 <- beta_new
+    }
+  }
+  return(beta)
+}
+beta <- newton_method()
+plot(1:length(beta), beta, xlab = "iteration", main = "Updates of beta at each iteration")
+lines(1:length(beta), beta)
+```  
+So from we could know, when the tolerance is 1e-5, the biggest negative root of this function is `r beta[length(beta)]`  
+
+### Problem 9  
+
+```{r Problem9,message=F,warning=F}
+######## Problem9: Cleaning and Combining data ###########
+#---------------a: load datasets into R  --------------------
+#this had the defect code and description
+car_gebreken_select <- fread(input = "../02_data_munging_summarizing_R_git/Open_Data_RDW__Gebreken.csv", 
+                             header = T, select=c(1,6), showProgress=F)
+#this has the license plate, inspection date and defect code
+car_geconstat_select <- fread(
+  input = "../02_data_munging_summarizing_R_git/Open_Data_RDW__Geconstateerde_Gebreken.csv", 
+  header=T, select=c(1,3,5),showProgress=F)
+#this has the license plate, make and model of vehicle
+car_person_select <- fread(input = "../02_data_munging_summarizing_R_git/Personenauto_basisdata.csv", 
+                           header=T, showProgress = F, select = c(1,3,4))
+
+#--------------- b: join them together -------------------------
+### First join car_person_select and car_Geconstat_select by license plate
+### Then join the merged one with car_gebreken_select by defect code
+merged_geconstat_person <- merge(car_geconstat_select,car_person_select,by = 'Kenteken',all = T)
+merged_all <- merge(merged_geconstat_person,car_gebreken_select,by = "Gebrek identificatie",all = T) 
+
+#------------------ c: clean the data  ----------------------------
+### translate the variables and remove observations containg missing values for any of the variables
+colnames(merged_all) <- c("defect_code","liscence_plate","inspection_date","make","model","defect_description")
+merged_tidy <- na.omit(merged_all)
+```  
+
+####d.how many DIFFERENT makes and models of cars you end with (?unique ?distinct ?duplicated) considering only year 2017   
+```{r Problem9d}
+####### Problem9:d ######
+merged_tidy_2017 <- merged_tidy[grep("2017",merged_tidy$inspection_date),]
+diff_makes <- n_distinct(merged_tidy_2017$make)
+diff_models <- n_distinct(merged_tidy_2017$model)
+```  
+The different makes of cars is `r diff_makes` and the different models of cars is `r diff_models`.    
+
+####  e. report a table of the 5 most frequent defects (translated) and the top make/models having that defect (?count) again considering only year 2017   
+```{r Probelm9e}
+####### Problem9:e ######
+summary1 <- merged_tidy_2017 %>% group_by(defect_code,make) %>% 
+  summarise(make_frequency = n()) %>% group_by(defect_code) %>% 
+  mutate(defect_frequency = sum(make_frequency)) %>% 
+  mutate(top_make_number = max(make_frequency)) %>%   
+  filter(make_frequency %in% top_make_number) %>% 
+  arrange(desc(defect_frequency)) %>% 
+  select(-top_make_number)
+kable(summary1[1:5,],caption = "Top 5 mose frequent defects and the top coresponding make") %>%
+  kable_styling(full_width = T)
+
+```  
+
+####f. use function lm to test for a relationship between number of defects observed by make, report both the coefficient and anova tables (2017 only)   
+```{r Problem9f}
+####### Problem9:f ######
+summary2 <- merged_tidy_2017 %>% group_by(make) %>%
+  summarise(number_defect = n_distinct(defect_code)) %>%
+  mutate(make = as.numeric(as.factor(make)))
+#kable(head(summary2),caption = "number of distinct defects observed by it make")
+fit1 <- lm(number_defect~make,data = summary2)
+stargazer(fit1,title = "summary of linear regression",type = "text",align = T)
+stargazer(anova(fit1),title = "anova table",type = "text",align = T)
+```
+
+####g.repeat (f) by model (2017 only)  
+```{r Problem9f}
+####### Problem9:g ######
+summary3 <- merged_tidy_2017 %>% group_by(model) %>%
+  summarise(number_defect = n_distinct(defect_code)) %>%
+  mutate(make = as.numeric(as.factor(model)))
+#kable(head(summary3),caption = "number of distinct defects observed by it model") %>%
+  kable_styling(full_width = T)
+fit2 <- lm(number_defect~model,data = summary3)
+stargazer(fit2,title = "summary of linear regression",type = "text",align = T)
+stargazer(anova(fit2),title = "anova table",type = "text",align = T)
+```
+
+####h.comment on this workflow and how you might be more computationally efficient
+I think save those important intermediate dataset for those summarise analysis would improve the efficiency a lot.  
+ 
+
+
+### Appendix: R code  
+
+```{r Appendix, ref.label=c("Problem6_function","Problem6_mean","Problem6_sd","problem7","Problem8_Plot","Problem8_function"), echo=TRUE, eval=F, tidy=TRUE, include=T}
+  
+```
+
+### Reference:  
+
+I didn't have a good idea to construct a clean anova table at first and knew about the stargazer function from Erica Porter's work.  
+- Hlavac, Marek (2015). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2. http://CRAN.R-project.org/package=stargazer
 
 
