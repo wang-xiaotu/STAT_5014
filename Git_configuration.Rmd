@@ -1,0 +1,90 @@
+---
+title: "Configuring_git"
+author: "Bob Settlage"
+date: "September 12, 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Configuring git
+
+Note, this is a working document describing how we get:
+
+1. Git and github configured
+2. An initial fork of the class repo
+3. Rprojects setup to use the github fork as our personal repo
+4. Git configured locally to allow pushing to our personal repo
+5. Git configured to pull changes from the upstream branch (class repo)
+
+
+# Step 1: get git
+Download git from <https://git-scm.com>  
+
+# Step 2: sign up for a github account
+<https://github.com>  
+
+# Step 3: configure your ssh keys
+1. In R, go to Tools –> Global Options.  
+2. Click on the Git/SVN icon in the window that pops up.  
+3. If you havn’t messed with SSH keys, go ahead and click generate RSA key.  
+4. Once done, click on view public key and then copy the key (everything in the window).  
+5. You now need to add this to your GitHub profile. In Github, click on the pulldown to view your profile and choose settings then SSH and GPG keys.  
+6. Click on New SSH key and paste you RSA public key there.
+
+# Step 4: configure your local git
+```{r eval=F, echo=T}
+    git config --global user.email "you@example.com"  
+    git config --global user.name "Your Name" 
+```
+
+# Step 5: fork the class repo
+In Github, you will want to “fork” my class repo.  
+
+1. Search for STAT_5014.  
+2. Towards the right top of the page, you will see a little icon labeled “Fork”. Click on this to create a linked copy of my repo in your GitHub repo set. You should now be in your Git repo set.  
+3. Look at the repo name towards the top left, it should be /STAT_5014. IF so, click on the clone or download button to the middle right. Copy the https address which should look like https://github.com/_your username_/STAT_5014.git . MAKE sure the link has YOUR user name.
+
+# Step 6: setup Rproject
+
+1. In R: File --> New Project --> Version Control --> Git  
+2. In the Repository URL box, past the https address from Part A.  
+3. In the Project directory name box, type STAT_5015_homework  
+4. In the Create project as subdirectory, browse to where you want your homework files to live.
+
+# Step 7: Configure git to allow updates from an upstream fork
+
+If you type this, you should get output as shown:  
+
+```{r echo=T, eval=F}
+
+git remote add upstream https://github.com/rsettlage/STAT_5014.git
+git remote -v ###this should give the following output
+origin    https://github.com/YOUR_USERNAME/YOUR_FORK.git (fetch)
+origin    https://github.com/YOUR_USERNAME/YOUR_FORK.git (push)
+upstream  https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git (fetch)
+upstream  https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git (push)
+```
+
+# Step 8: get upstream changes and merge with your fork
+```{r echo=T, eval=F}
+git fetch upstream
+git checkout master
+git merge upstream/master
+```
+
+To get updates, repeat step 8.
+
+
+If you want to read more about this:  
+
+<https://help.github.com/articles/configuring-a-remote-for-a-fork/>  
+<https://help.github.com/articles/syncing-a-fork/>  
+
+Cheatsheet  
+<https://services.github.com/on-demand/downloads/github-git-cheat-sheet/>
+
+Just in case
+<https://stackoverflow.com/questions/7244321/how-do-i-update-a-github-forked-repository>
