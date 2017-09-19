@@ -14,9 +14,9 @@ library(tidyr)
 library(readr)
 library(stringr)
 library(kableExtra)
-library(stargazer)
+library(pander)
 knitr::opts_chunk$set(echo = F, eval=T, cache=T, tidy.opts=list(width.cutoff=55),
-                tidy=T, message=F, warning=F)
+                tidy=T, message=F, warning=F, cache.lazy = FALSE)
 ```
 
 
@@ -80,6 +80,7 @@ kable(com_df,caption = "Summary of data by Obersvers",digits = 4) %>%
 - The boxplot of mean for device1 and device2 is following:  
 
 ```{r Problem6_mean, fig.align='center', fig.width = 5, fig.height=3.5}
+
 #-------------create boxplot for dev1 and dev2 mean-------------------------------
 device_mean <- c(com_df[,1],com_df[,2])
 device_index <- rep(c(1,2),each = 13)
@@ -87,6 +88,7 @@ mean_summary <- data.frame("mean" = device_mean,
                            "device" = as.factor(device_index))
 ggplot(data = mean_summary, aes(x = device, y = mean), main = "boxplot of the device mean") + 
   geom_boxplot()
+
 ```  
 
 - The violin plot of sd for device1 and device2 is following: 
@@ -151,7 +153,7 @@ set initial value of x denoted as $x_0$ and tolerance $\epsilon$
 Before directly applying this method, we can plot this function to choose an initial value. Because a bad initial point is easy to cause unconvergency.    
 
 ```{r Problem8_Plot,fig.align='center',fig.width=5,fig.height=4}
-######## Problem 8:Plot the function to choose initial value #########
+#### Problem 8:Plot the function to choose initial value #####
 f <- function(x){
   value <- 3^x - sin(x) + cos(5 * x)
   return(value)
@@ -189,7 +191,7 @@ beta <- newton_method()
 plot(1:length(beta), beta, xlab = "iteration", main = "Updates of beta at each iteration")
 lines(1:length(beta), beta)
 ```  
-So from we could know, when the tolerance is 1e-5, the biggest negative root of this function is `r beta[length(beta)]`  
+So from the above procedure we could know, when the tolerance is 1e-5, the biggest negative root of this function is `r round(beta[length(beta)],5)`  
 
 ### Problem 9  
 
@@ -200,36 +202,37 @@ So from we could know, when the tolerance is 1e-5, the biggest negative root of 
 car_gebreken_select <- fread(input = "../02_data_munging_summarizing_R_git/Open_Data_RDW__Gebreken.csv", 
                              header = T, select=c(1,6), showProgress=F)
 #this has the license plate, inspection date and defect code
-car_geconstat_select <- fread(
-  input = "../02_data_munging_summarizing_R_git/Open_Data_RDW__Geconstateerde_Gebreken.csv", 
+car_geconstat_select <- fread(input = "../02_data_munging_summarizing_R_git/Open_Data_RDW__Geconstateerde_Gebreken.csv", 
   header=T, select=c(1,3,5),showProgress=F)
 #this has the license plate, make and model of vehicle
 car_person_select <- fread(input = "../02_data_munging_summarizing_R_git/Personenauto_basisdata.csv", 
                            header=T, showProgress = F, select = c(1,3,4))
-
 #--------------- b: join them together -------------------------
 ### First join car_person_select and car_Geconstat_select by license plate
 ### Then join the merged one with car_gebreken_select by defect code
 merged_geconstat_person <- merge(car_geconstat_select,car_person_select,by = 'Kenteken',all = T)
-merged_all <- merge(merged_geconstat_person,car_gebreken_select,by = "Gebrek identificatie",all = T) 
-
+merged_all <- merge(merged_geconstat_person,car_gebreken_select,by = 'Gebrek identificatie',all = T) 
 #------------------ c: clean the data  ----------------------------
 ### translate the variables and remove observations containg missing values for any of the variables
 colnames(merged_all) <- c("defect_code","liscence_plate","inspection_date","make","model","defect_description")
 merged_tidy <- na.omit(merged_all)
+
 ```  
 
 ####d.how many DIFFERENT makes and models of cars you end with (?unique ?distinct ?duplicated) considering only year 2017   
 ```{r Problem9d}
+
 ####### Problem9:d ######
 merged_tidy_2017 <- merged_tidy[grep("2017",merged_tidy$inspection_date),]
 diff_makes <- n_distinct(merged_tidy_2017$make)
 diff_models <- n_distinct(merged_tidy_2017$model)
+
 ```  
 The different makes of cars is `r diff_makes` and the different models of cars is `r diff_models`.    
 
 ####  e. report a table of the 5 most frequent defects (translated) and the top make/models having that defect (?count) again considering only year 2017   
 ```{r Probelm9e}
+
 ####### Problem9:e ######
 summary1 <- merged_tidy_2017 %>% group_by(defect_code,make) %>% 
   summarise(make_frequency = n()) %>% group_by(defect_code) %>% 
@@ -245,44 +248,39 @@ kable(summary1[1:5,],caption = "Top 5 mose frequent defects and the top corespon
 
 ####f. use function lm to test for a relationship between number of defects observed by make, report both the coefficient and anova tables (2017 only)   
 ```{r Problem9f}
+
 ####### Problem9:f ######
 summary2 <- merged_tidy_2017 %>% group_by(make) %>%
   summarise(number_defect = n_distinct(defect_code)) %>%
   mutate(make = as.numeric(as.factor(make)))
-#kable(head(summary2),caption = "number of distinct defects observed by it make")
 fit1 <- lm(number_defect~make,data = summary2)
-stargazer(fit1,title = "summary of linear regression",type = "text",align = T)
-stargazer(anova(fit1),title = "anova table",type = "text",align = T)
+pander(summary(fit1))
+pander(anova(fit1))
+
 ```
 
 ####g.repeat (f) by model (2017 only)  
-```{r Problem9f}
+```{r Problem9g}
+
 ####### Problem9:g ######
 summary3 <- merged_tidy_2017 %>% group_by(model) %>%
   summarise(number_defect = n_distinct(defect_code)) %>%
-  mutate(make = as.numeric(as.factor(model)))
-#kable(head(summary3),caption = "number of distinct defects observed by it model") %>%
-  kable_styling(full_width = T)
+  mutate(model = as.numeric(as.factor(model)))
 fit2 <- lm(number_defect~model,data = summary3)
-stargazer(fit2,title = "summary of linear regression",type = "text",align = T)
-stargazer(anova(fit2),title = "anova table",type = "text",align = T)
+pander(summary(fit2))
+pander(anova(fit2))
+
 ```
 
 ####h.comment on this workflow and how you might be more computationally efficient
 I think save those important intermediate dataset for those summarise analysis would improve the efficiency a lot.  
+
  
 
 
 ### Appendix: R code  
 
-```{r Appendix, ref.label=c("Problem6_function","Problem6_mean","Problem6_sd","problem7","Problem8_Plot","Problem8_function"), echo=TRUE, eval=F, tidy=TRUE, include=T}
+```{r Appendix, ref.label=c("Problem6_table","Problem6_mean","Problem6_sd","problem7","Problem8_Plot","Problem8_function","Problem9","Problem9d","Problem9e","Problem9f","Problem9g"), echo=TRUE, eval=F, tidy=TRUE, include=T}
   
 ```
-
-### Reference:  
-
-I didn't have a good idea to construct a clean anova table at first and knew about the stargazer function from Erica Porter's work.  
-- Hlavac, Marek (2015). stargazer: Well-Formatted Regression and Summary Statistics Tables.
- R package version 5.2. http://CRAN.R-project.org/package=stargazer
-
 
