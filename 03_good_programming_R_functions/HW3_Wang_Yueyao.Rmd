@@ -54,8 +54,8 @@ data <- readRDS("./HW3_data.rds")
 #input: x is a dataframe for all samples from 1 Observer
 #return:a dataframe of descriptive statstics
 descrip_stats <- function(x){
-  mean_dev1_dev2 <- apply(x,MARGIN = 1,FUN = mean)
-  sd_dev1_dev2 <- apply(x,MARGIN = 1,FUN = sd)
+  mean_dev1_dev2 <- apply(x[,2:3],MARGIN = 2,FUN = mean)
+  sd_dev1_dev2 <- apply(x[,2:3],MARGIN = 2,FUN = sd)
   correlation <- cor(x[,2],x[,3])
   d <- data.frame("mean_dev1" = mean_dev1_dev2[1],
                   "mean_dev2" = mean_dev1_dev2[2],
