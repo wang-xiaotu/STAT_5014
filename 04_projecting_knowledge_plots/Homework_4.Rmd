@@ -52,7 +52,7 @@ Things you need to answer/show:
 4. correlation plots (?pairs, ?plotcorr)  
 5. This is the SAME dataset as in Problem 6 of the last homework with the factors relabeled.  What is the lesson in this dataset when considering the summary statistics and the plots??  
 
-NOTE: DO use this version and NOT the previous version, i.e. load using the xlsx package as above
+NOTE: DO use this version and NOT the previous version, i.e. load using the xlsx package as above so the factors are correctly labeled.
 
 
 ## Problem 5
