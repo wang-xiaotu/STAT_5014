@@ -35,23 +35,40 @@ In the lecture, there were a few links to Exploratory Data Analysis (EDA) materi
 
 ## Problem 4
 
-In this weeks folder, there is an Excel file containing the dataset for this problem: HW4_data.xlsx.  Read this into R (see below).  Make sure you get (and combine) BOTH sheets of data.  Work up a well annotated reproducible exploration of this dataset using the principles discussed in class or in the supplementary material.  Things you may consider:  
+In this weeks folder, there is an Excel file containing the dataset for this problem: HW4_data.xlsx.  Read this into R (see below).  Make sure you get (and combine) BOTH sheets of data.  Work up a well annotated reproducible exploration of this dataset using the principles discussed in class or in the supplementary material. 
 
-1. summary statistics (combined in a table?)  
-2. factor exploration, what factors are present?  
-3. multipanel plots of the data (lattice, ggplot2, base R)  
-4. correlation plots (?pairs, ?plotcorr)
-
-```{r echo=T, eval=F}
+```{r echo=T, eval=F, include=T}
     library(xlsx)
     prob4_data1 <- read.xlsx("HW4_data.xlsx", sheetIndex = 1)
 ```
+
+Things you need to answer/show:  
+
+1. summary statistics (combined in a table?)  
+2. factor exploration, what factors are present?  
+3. create a (couple?) multipanel plot (lattice, ggplot2, base R)  
+    + Base R help: <http://www.statmethods.net/advgraphs/layout.html>
+    + GGplot2: <http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_(ggplot2)/>
+4. correlation plots (?pairs, ?plotcorr)  
+5. This is the SAME dataset as in Problem 6 of the last homework with the factors relabeled.  What is the lesson in this dataset when considering the summary statistics and the plots??  
+
+NOTE: DO use this version and NOT the previous version, i.e. load using the xlsx package as above so the factors are correctly labeled.
 
 
 ## Problem 5
 
 For problem 4, is there a single most illuminating figure that shows a key component of the data??  This is the figure you should use as your first submission in next weeks contest.  Save it as a pdf and make sure it is ready for pushing at the start of class. (Torg 1100, try to be a little early)  What did this exercise show you?  
 
+```{r eval=F, echo=T, include=T, results='asis', tidy=F}
+######################################################
+######################################################
+############ END OF HOMEWORK #########################
+######################################################
+######################################################
+
+### We will have a more detailed plotting discussion
+### and do the following 2 data sets next week
+```
 ## Problem 6
 
 Get a dataset, choose ONE:  
