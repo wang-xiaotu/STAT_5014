@@ -213,7 +213,7 @@ Currently we have `for`, `while`, and `repeat`, each of which can be modified by
 
 Combining loops and functions allows you to automate tedious tasks.
 
-```{r, eval=F, echo=T}
+```{r, eval=F, echo=T, tidy=T}
     library(tidyverse)
     #read in and tidy data
     example_data<-readRDS("../03_good_programming_R_functions/HW3_data.rds")
