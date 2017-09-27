@@ -13,7 +13,7 @@ output: pdf_document
 
 For each assignment, turn in by the due date/time.  Late assignments must be arranged prior to submission.  In every case, assignments are to be typed neatly using proper English in Markdown.  
 
-This week, we spoke about Exploratory Data Analysis and plotting. To begin the homework, we will as usual, start by loading, munging and creating tidy data sets.  In this homework, our goal is to create informative (and perhaps pretty) plots showing features or perhaps deficiencies in the data.
+This week, we spoke about Exploratory Data Analysis (EDA) and plotting. In this homework, we will as usual, load, munge and create tidy data sets.  In EDA, our goal is often to create informative (and perhaps pretty) plots showing features or perhaps deficiencies in the data.  Perhaps more importantly, our goal is to find these deficiencies and explore relationships in the data.  Efficiently.
 
 ## Problem 1
 
@@ -37,7 +37,7 @@ What are you thoughts for what makes a good figure?
 
 a. Create a function that computes the proportion of successes in a vector.  Use good programming practices.
 
-b. Create a matrix created to simulate 10 flips of a coin with varying degrees of "fairness" as follows:
+b. Create a matrix to simulate 10 flips of a coin with varying degrees of "fairness" as follows:
 
 ```{r echo=T, include=T, eval=F}
 
@@ -45,9 +45,9 @@ b. Create a matrix created to simulate 10 flips of a coin with varying degrees o
 
 ```
 
-c. Use your function in conjunction with apply to compute the proportion of success in P4b_data by column and row.  What do you observe?  What is going on?
+c. Use your function in conjunction with apply to compute the proportion of success in P4b_data by column and then by row.  What do you observe?  What is going on?
 
-d. Fix the above matrix by creating a function whose input is a probability and output is a vector whose elements are the outcomes of 10 flips of a coin.  Now create a vector of the desired probabilities.  Using the appropriate apply family function, create the matrix we really wanted above.  Prove this has worked by using the function created in part a to compute and tabulate the appropriate marginal successes.
+d. You are to fix the above matrix by creating a function whose input is a probability and output is a vector whose elements are the outcomes of 10 flips of a coin.  Now create a vector of the desired probabilities.  Using the appropriate apply family function, create the matrix we really wanted above.  Prove this has worked by using the function created in part a to compute and tabulate the appropriate marginal successes.
 
 ## Problem 5
 
@@ -59,7 +59,7 @@ Load, munge, and explore the data given in Wu and Hamada from the starch experim
 
 Our ultimate goal in this problem is to create an annotated map of the US.  I am giving you the code to create said map, you will need to customize it to include the annotations.
 
-Part a. Get an import a database of US cities and states.  Here is some R code to help:
+Part a. Get and import a database of US cities and states.  Here is some R code to help:
 
 ```{r get_city_list, echo=T, eval=F, include=T}
 
@@ -96,7 +96,7 @@ Create a for loop to loop through the state names imported in part a.  Inside th
         return(count)
     }
     for(i in 1:50){
-        letter_count[i,] <- xxapply(args)
+        letter_count[i,] <- xx-apply(args)
     }
 ```
 
