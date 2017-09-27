@@ -1,0 +1,136 @@
+---
+title: "Homework4"
+author: "Yueyao Wang"
+date: "September 25, 2017"
+output: pdf_document
+---
+
+```{r, include=FALSE, message=F, warning=F}
+library(xlsx)
+library(knitr)
+library(kableExtra)
+library(ellipse)
+library(ggplot2)
+library(ggExtra)
+library(MASS)
+knitr::opts_chunk$set(echo = F, eval=T, tidy.opts=list(width.cutoff=55),
+                tidy=T, message=F, warning=F)
+```
+
+### Problem3  
+
+By Roger Peng, the EDA should focus on identifying relationships between variables that are particularly interesting or unexpected, checking to see if there is any evidence for or against a stated hypothesis, checking for problems with the collected data, such as missing data or measurement error), or identifying certain areas where more data need to be collected.  
+
+
+### Problem4  
+
+#### 1. Summary Statistics  
+
+```{r Problem4.1}
+
+#--------load and combine data-------------
+prob4_data1 <- read.xlsx("HW4_data.xlsx",sheetIndex = 1)
+prob4_data2 <- read.xlsx("HW4_data.xlsx",sheetIndex = 2)
+prob4_data <- rbind(prob4_data1, prob4_data2)
+
+#------create summary statistics table-----------
+descrip_stats <- function(x){
+  #input: x is a dataframe for all samples from 1 Observer
+  #return:a dataframe of descriptive statstics
+  mean_ <- apply(x[,2:3],MARGIN = 2,FUN = mean)
+  sd_ <- apply(x[,2:3],MARGIN = 2,FUN = sd)
+  correlation <- cor(x[,2],x[,3])
+  d <- data.frame("mean_depth" = mean_[1],
+                  "mean_phosphate" = mean_[2],
+                  "sd_depth" = sd_[1],
+                  "sd_phosphate" = sd_[2],
+                  "correlation" = correlation)
+  return(d)
+}
+obs_1 <- subset(prob4_data, block == 1)
+com_df <- descrip_stats(obs_1)
+for(i in 2:13){
+  obs_i <- subset(prob4_data, block == i)
+  des_df <- descrip_stats(obs_i)
+  com_df <- rbind(com_df,des_df)
+}
+rownames(com_df) <- paste("Observer",1:13,sep = "")
+kable(com_df,caption = "Summary of data by Obersvers",digits = 4) %>% 
+  kable_styling(full_width = T)
+```  
+
+
+####2.  
+
+```{r Problem4.2}
+#----store the dataset used to create ggplots-----
+prob4_data_gg <- prob4_data
+prob4_data_gg$block <- as.factor(prob4_data_gg$block)
+#------density plot-----------
+ggplot(data = prob4_data_gg, aes(x = depth, fill = block)) + 
+  geom_density(aes(alpha = 0.5))  +  
+  geom_rug(col="steelblue",alpha=0.1, size=1.5) + 
+  ggtitle("Density of Depth for Each Blcok") + 
+  facet_wrap(~block) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(data = prob4_data_gg, aes(x = phosphate, fill = block)) + 
+  geom_density(aes(alpha = 0.5))  +  
+  geom_rug(col="steelblue",alpha=0.1, size=1.5) + 
+  ggtitle("Density of Phosphate for Each Blcok") + 
+  facet_wrap(~block) +
+  theme(plot.title = element_text(hjust = 0.5))
+```  
+
+From the above plots we could see that the block is an important factor because the density of phosphate and depth for different are highly different.  
+
+
+####3.  
+
+```{r Problem4.3, fig.align='center', fig.height=7, fig.width=6}
+
+#----scatterplot with density margin-----
+p <- ggplot(data = prob4_data_gg, aes(x = depth, y = phosphate)) + 
+  geom_point(size = 0.3) +
+  geom_smooth() + 
+  ggtitle("Scatterplot with Density Margin") +
+  theme(plot.title = element_text(hjust = 0.5))
+ggMarginal(p, type = "density") 
+#---scatterplot for different blocks----
+ggplot(data = prob4_data_gg, aes(x = depth, y = phosphate)) + 
+  geom_point() + 
+  geom_smooth(aes(colour = block, fill = block)) + 
+  facet_wrap(~block) + 
+  ggtitle("Scatterplot for Different Blocks") +
+  theme(plot.title = element_text(hjust = 0.5))
+```  
+#### 4  
+
+If we fit the model $$phosphate_{ij} = block_i + depth_{ij} + \epsilon$$, we could get the relationship of phosphate on depth and block. Model coefficients and correlation plots are following:  
+```{r Problem4.4, fig.align='center'}
+fit_total <- lm(phosphate~depth + block + 0, data = prob4_data_gg)
+kable(summary(fit_total)$coefficient, caption = "Coefficient of Linear Model")
+cormatrix <- summary(fit_total, correlation = T)$correlation
+colors <- c("#A50F15","#DE2D26","#FB6A4A","#FCAE91","#FEE5D9","white",
+            "#EFF3FF","#BDD7E7","#6BAED6","#3182BD","#08519C")
+plotcorr(cormatrix, col = colors[(cormatrix*1000000) %% 11], type = "upper")
+```  
+
+#### 5  
+
+When we put all blocks data together, the regression line on the scatterplot of depth and phosphate shows us that on average, as depth increasing, the phosphate decreases. However, the dots on the scatterplot spread around and we can't acutally capture that trend. So I did the scatterplot of depth and phosphate again for each block to see their relationship. Except block 11, most blocks phosphate fluctuates around a horizontal line as the depth increasing. This indicates that there isn't much relationship between depth and phosphate for most blocks.   
+
+For block 11, from the density plot of depth we can see that the depth for block 11 concentrates on 3 levels and on each level of depth there are different phospahte values. So again, there isn't much relationship between depth and phosphate for block 11.  
+
+### Appendix: Code  
+
+```{r Appendix, ref.label=c("Problem4.1","Problem4.2","Problem4.3","Problem4.4"), echo=TRUE, eval=F, tidy=TRUE, include=T}
+  
+```
+
+
+
+
+
+
+
