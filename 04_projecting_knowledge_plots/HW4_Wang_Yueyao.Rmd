@@ -99,7 +99,7 @@ ggMarginal(p, type = "density")
 #---scatterplot for different blocks----
 ggplot(data = prob4_data_gg, aes(x = depth, y = phosphate)) + 
   geom_point() + 
-  geom_smooth(aes(colour = block, fill = block)) + 
+#  geom_smooth(aes(colour = block, fill = block)) + 
   facet_wrap(~block) + 
   ggtitle("Scatterplot for Different Blocks") +
   theme(plot.title = element_text(hjust = 0.5))
