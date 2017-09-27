@@ -1,6 +1,6 @@
 ---
 title: "Statistics 5014: Homework 4"
-subtitle: "Due Wednesday September 27 IN CLASS Torg 1100, 9 am"
+subtitle: "Due Tuesday October 3, 11am"
 date: '`r Sys.Date()`'
 output: pdf_document
 ---
@@ -51,11 +51,85 @@ d. Fix the above matrix by creating a function whose input is a probability and 
 
 ## Problem 5
 
-Load, munge, explore the data given in Wu and Hamada from the starch experiment.  Consider strength as the response.  You do not need to form a model or otherwise analyze the dataset, you do need to explore the data and make observations.  
+Load, munge, and explore the data given in Wu and Hamada from the starch experiment.  Consider strength as the response.  You do not need to form a model or otherwise analyze the dataset, you do need to explore the data, make any figures/tables necessary to make observations about the data, and generally annotate the process in text.  
 
 <http://www2.isye.gatech.edu/~jeffwu/book/data/starch.dat>
 
 ## Problem 6
+
+Our ultimate goal in this problem is to create an annotated map of the US.  I am giving you the code to create said map, you will need to customize it to include the annotations.
+
+Part a. Get an import a database of US cities and states.  Here is some R code to help:
+
+```{r get_city_list, echo=T, eval=F, include=T}
+
+    #we are grabbing a SQL set from here
+    # http://www.farinspace.com/wp-content/uploads/us_cities_and_states.zip
+
+    #download the files, looks like it is a .zip
+    library(downloader)
+    download("http://www.farinspace.com/wp-content/uploads/us_cities_and_states.zip",dest="us_cities_states.zip")
+    unzip("us_cities_states.zip", exdir="./")
+    
+    #read in data, looks like sql dump, blah
+    library(data.table)
+    states <- fread(input = "./us_cities_and_states/states.sql",skip = 23,sep = "'", sep2 = ",", header = F, select = c(2,4))
+    ### YOU do the CITIES
+    ### I suggest the cities_extended.sql may have everything you need
+    ### can you figure out how to limit this to the 50?
+    
+```
+
+Part b. Create a summary table of the number of cities included by state.
+
+Part c. Create a function that counts the number of occurances of a letter in a string.  The input to the function should be "letter" and "state_name".  The output should be a scalar with the count for that letter.
+
+Create a for loop to loop through the state names imported in part a.  Inside the for loop, use an apply family function to iterate across a vector of letters and collect the occurance count as a vector.
+
+```{r echo=T, eval=F, include=T}
+
+    ##pseudo code
+    letter_count <- data.frame(matrix(NA,nrow=50, ncol=26))
+    getCount <- function(what args){
+        temp <- strsplit(state_name)
+        # how to count??
+        return(count)
+    }
+    for(i in 1:50){
+        letter_count[i,] <- xxapply(args)
+    }
+```
+
+Part d.
+
+Create 2 maps to finalize this.  Map 1 should be colored by count of cities on our list within the state.  Map 2 should highlight only those states that have more than 3 occurances of ANY letter in thier name.
+
+
+Quick and not so dirty map:
+
+```{r eval=F, echo=T, include=T}
+    #https://cran.r-project.org/web/packages/fiftystater/vignettes/fiftystater.html
+    library(ggplot2)
+    library(fiftystater)
+    
+    data("fifty_states") # this line is optional due to lazy data loading
+    crimes <- data.frame(state = tolower(rownames(USArrests)), USArrests)
+    # map_id creates the aesthetic mapping to the state name column in your data
+    p <- ggplot(crimes, aes(map_id = state)) + 
+      # map points to the fifty_states shape data
+      geom_map(aes(fill = Assault), map = fifty_states) + 
+      expand_limits(x = fifty_states$long, y = fifty_states$lat) +
+      coord_map() +
+      scale_x_continuous(breaks = NULL) + 
+      scale_y_continuous(breaks = NULL) +
+      labs(x = "", y = "") +
+      theme(legend.position = "bottom", 
+            panel.background = element_blank())
+    
+    p
+    #ggsave(plot = p, file = "HW5_Problem6_Plot_Settlage.pdf")
+```
+## Problem 7
 
 Push your homework and submit a pull request.
 
