@@ -1,5 +1,5 @@
 ---
-title: "Statistics 5014: Homework 4"
+title: "Statistics 5014: Homework 5"
 subtitle: "Due Tuesday October 3, 11am"
 date: '`r Sys.Date()`'
 output: pdf_document
@@ -41,7 +41,8 @@ b. Create a matrix to simulate 10 flips of a coin with varying degrees of "fairn
 
 ```{r echo=T, include=T, eval=F}
 
-    P4b_data <- matrix(rbinom(10, 1, prob = (1:10)/100), nrow = 10, ncol = 10)
+    set.seed(12345)
+    P4b_data <- matrix(rbinom(10, 1, prob = (30:40)/100), nrow = 10, ncol = 10)
 
 ```
 
