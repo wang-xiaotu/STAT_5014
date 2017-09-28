@@ -7,5 +7,5 @@ Personenauto*
 ~$*
 *_cache*
 *_files*
-*txt
-*csv
+*.txt
+*.csv
