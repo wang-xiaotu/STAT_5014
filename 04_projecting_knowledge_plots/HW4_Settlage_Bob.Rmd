@@ -1,0 +1,218 @@
+---
+title: "Stat 5014 HW4"
+author: "Bob Settlage"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  fig_caption: yes
+  fig_height: 6
+  fig_width: 7
+  classoption: landscape
+  pdf_document: default
+header-includes: \setlength\parindent{24pt} \usepackage{MnSymbol} \usepackage{mathrsfs}
+---
+
+```{r setup, include=FALSE, message=F, warning=F}
+    #initialize and load libraries
+    rm(list = ls())   
+    graphics.off()
+    options(scipen = 4, digits = 6)
+    options(stringsAsFactors = FALSE)
+    knitr::opts_chunk$set(echo = F, eval=T, cache=T, tidy.opts=list(width.cutoff=55),
+                tidy=T, include=FALSE, message=F, warning=F)
+    library.warn <- library
+    library <- function(package, help, pos = 2, lib.loc = NULL, character.only = FALSE,
+                        logical.return = FALSE, warn.conflicts = FALSE, quietly = TRUE,
+                        verbose = getOption("verbose")) {
+       if (!character.only) {
+          package <- as.character(substitute(package))
+       }
+       suppressPackageStartupMessages(library.warn(
+          package, help, pos, lib.loc, character.only = TRUE,
+          logical.return, warn.conflicts, quietly, verbose))}
+    #setwd("~/Google Drive/Projects/....")
+
+    #install.packages("scatterplot3d")
+    #library(scatterplot3d)
+    #install.packages("car")
+    #library(car)
+    #library(doParallel)
+    #setup parallel backend to use 7 processors
+    #no_cores <- detectCores() - 2
+    #cl<-makeCluster(no_cores)
+    #registerDoParallel(cl)
+    #stopCluster(cl)
+    #library(MASS)
+    #library(RColorBrewer)
+    #library(plot3D)
+    #install.packages("tidyverse") ##kinda overkill, only need dplyr and tidyr
+    library(tidyverse)
+    library(beeswarm)
+    library(stargazer)
+    library(data.table)
+    library(lubridate)
+    library(doBy)
+    library(ggpubr)
+    library(readxl)
+    library(gganimate)
+    library(ggdendro)
+```
+
+```{r misc_function}
+# A function for captioning and referencing images
+# figure captions are a pain IMO, I don't remember where I got this from but it may be referenced here: 
+##https://rpubs.com/ajlyons/autonumfigs
+
+fig <- local({
+    i <- 0
+    ref <- list()
+    list(
+        cap=function(refName, text) {
+            i <<- i + 1
+            ref[[refName]] <<- i
+            text
+        },
+        ref=function(refName) {
+            ref[[refName]]
+        })
+})
+#cat("\n\n\\pagebreak\n")
+
+panel.cor <- function(x, y, digits = 3, prefix = "", cex.cor, ...){
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(0, 1, 0, 1))
+  r <- abs(cor(log2(x+0.001), log2(y+0.001)))
+  countsx<-sum(x)
+  countsy<-sum(y)
+  txt1 <- format(c(countsx, 0.123456789), digits = digits)[1]
+  txt3 <- format(c(countsy, 0.123456789), digits = digits)[1]
+  txt2 <- format(c(r, 0.123456789), digits = digits)[1]
+  txt <- paste0(txt2, ", ",txt1,", ",txt3)
+  if(missing(cex.cor)) cex.cor <- 0.7/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor)
+}
+panel.loglog <- function(x,y, ...){
+  #"usr" is a par attribute that sets the plot area
+  max_y<-max(max(log2(x)+1),max(log2(y)+1))
+  ##par(usr = c(0, max(log2(x)+1), 0, max(log2(y)+1) ))
+  par(usr = c(0, max_y, 0, max_y ))
+  points(log2(x+0.001), log2(y+0.001))
+}
+#pairs(temp,lower.panel=panel.loglog,upper.panel=panel.cor)
+```
+
+#Problem 3
+
+Roger Peng's book is a nice summary.  According to Roger, EDA has as it's focus:
+
+
+
+#Problem 4
+
+First, we will read in and create a tidy dataset.  After tidying, a summary is in Tables 1 and 2 with a violin plot in Figures 1 and 2.  I will put this code in an Appendix.
+
+
+```{r Problem4_DataSaurus_import, echo=F, eval=T}
+    ########################### 
+    #Problem4_DataSaurus_analysis  
+    #get data  
+    ########################### 
+    
+    HW4_s1_raw <- read_excel("HW4_data.xlsx", sheet=1)
+    HW4_s2_raw <- read_excel("HW4_data.xlsx", sheet=2)
+    
+    HW4_tidy<-bind_rows(HW4_s1_raw, HW4_s2_raw)
+    ## in this case, this is how we want the data,
+    ## we might consider phosphate as "y", depth as "x", 
+    ## and block as a confounding factor, time to explore
+    ########################### 
+    
+```
+
+
+```{r Problem4_DataSaurus_summarizing, echo=F, include=T, eval=T, results='asis'}
+    knitr::kable(summary(HW4_tidy), caption="Basic data description")
+    summary_by_block <- HW4_tidy %>% 
+        group_by(block) %>% 
+        summarize(mean_phos=mean(phosphate), 
+                  mean_depth=mean(depth),
+                  block_cor=cor(phosphate,depth),
+                  observations=n())
+    knitr::kable(summary_by_block, caption="Datasaurus data summary grouped by block")
+```
+
+The data looks good from a clean standpoint, no NA's, data format is as desired, etc.  Next up, some figures to see if we see patterns.  
+
+```{r Problem4_DataSaurus_violins, eval=T, echo=F, cache=F, include=T, results='asis', fig.cap=fig$cap("plot1","Datasauras data as violins."),fig.width=7, fig.height=7, fig.align="center"}  
+    ########################### 
+    #Problem4_DataSaurus_violins  
+    #violings
+    ########################### 
+    p<-ggplot(HW4_tidy, aes(as.factor(block), phosphate)) +
+        geom_violin(draw_quantiles = c(0.25, 0.5, 0.75)) +
+        geom_point(position = "jitter") +
+        labs(x="block")
+    d<-ggplot(HW4_tidy, aes(as.factor(block), depth)) +
+        geom_violin(draw_quantiles = c(0.25, 0.5, 0.75)) +
+        geom_point(position = "jitter") +
+        labs(x="block")
+    ggarrange(p, d, labels = c("A", "B"),
+          ncol = 1, nrow = 2)
+
+```
+
+Hmmm, ok, the violin plots suggest some oddness with the distribution in phosphate and depth as a function of block.  Let's look at scatter plots.
+
+```{r Problem4_DataSaurus_scatter, eval=T, echo=F, cache=F, include=T, results='asis', fig.cap=fig$cap("plot1","Datasauras data as scatter."),fig.width=7, fig.height=7, fig.align="center"}  
+    ########################### 
+    #Problem4_DataSaurus_scatter  
+    #scatter
+    ########################### 
+    p<-ggplot(HW4_tidy, aes(depth, phosphate)) +
+        geom_point() +
+        facet_wrap(~block)
+    p
+
+```
+
+Dinosaur??!!  Time to animate...
+
+```{r,out.width = "600px", echo=F, fig.align="center", include=T, eval=T, echo=F}
+    p<-ggplot(HW4_tidy, aes(depth, phosphate, frame=block)) +
+        geom_point()
+    gganimate(p,saver = "gif", filename = "datasaurus.gif", interval = .4)
+    knitr::include_graphics("datasaurus.gif",auto_pdf=F)
+```
+
+OK, someone is messing with us, but just for kicks, lets see which shapes the dinosaur is most like.
+
+```{r dendrogram, echo=F, eval=T, include=T}
+
+    ## for fun, stack phosphate:depth and compute dist
+    ## just flattening the x,y data and computing vector distances
+    ## not really the way to do this, but for illustration purposes..
+    ## what is the best way to do this?? pair data by NN then do ||v*u||/(||v||*||u||)?
+    HW4_messy <- gather(HW4_tidy, value, x, phosphate:depth) %>%
+        transmute(block,x)
+    temp <- matrix(NA,nrow=142,2)
+    for(i in 1:13){temp <- cbind(temp,HW4_messy[HW4_messy$block==i,2])}
+    HW4_messy<-temp[,-c(1:2)]
+    colnames(HW4_messy) <- paste0("block",1:13)
+    
+    hc <- hclust(dist(t(HW4_messy)), "ave")  # hierarchical clustering
+    
+    # plot
+    ggdendrogram(hc, rotate = TRUE, size = 2)
+
+```
+
+Another cool site with nice tutorials and sweet graphics walkthroughs.  
+
+<http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html>  
+
+<http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/81-ggplot2-easy-way-to-mix-multiple-graphs-on-the-same-page/>
+
+#Appendix 1: R code  
+```{r Appendix, ref.label="Problem4_DataSaurus_summarizing", echo=F, eval=F, tidy=TRUE, include=F}
+  
+```
