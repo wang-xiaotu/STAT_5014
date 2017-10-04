@@ -69,13 +69,13 @@ coinflip_vec <- function(p){
   c <- rbinom(10, 1, p)
   return(c)
 }
-desired_prop <- (31:40)/10
+desired_prop <- (31:40)/100
 P4d_data <- sapply(desired_prop, coinflip_vec)
 
 #----compute the success proportion---
 P4d_succ_prop <- apply(P4d_data, MARGIN = 2, FUN = succ_prop)
 P4d_succ_prop <- as.data.frame(t(P4d_succ_prop))
-colnames(P4d_succ_prop) <- paste("p", (31:40)/10, sep = "_")
+colnames(P4d_succ_prop) <- paste("p", (31:40)/100, sep = "_")
 kable(P4d_succ_prop, caption = "Success Proportion in Part d")
 
 ```  
