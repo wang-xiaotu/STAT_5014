@@ -72,7 +72,7 @@ upstream  https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git (push)
 ```{r echo=T, eval=F}
 git fetch upstream
 git checkout master
-git merge -Xthiers upstream/master
+git merge -Xtheirs upstream/master
 ```
 
 To get updates, repeat step 8.
