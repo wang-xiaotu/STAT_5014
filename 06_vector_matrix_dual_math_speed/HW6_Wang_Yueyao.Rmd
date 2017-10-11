@@ -1,0 +1,153 @@
+---
+title: "Homework6"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+```{r setup, include=FALSE, message=F, warning=F}
+library(knitr)
+library(doMC)
+library(parallel)
+library(snow)
+knitr::opts_chunk$set(echo = F, eval=T, cache=T, tidy.opts=list(width.cutoff=55),
+                tidy=T, message=F, warning=F, cache.lazy = FALSE)
+```
+
+### Problem 2  
+
+```{r P2}
+set.seed(12345)
+y <- seq(from = 0, to = 100, length.out = 1e+08) + rnorm(1e+08)
+#------method a: loop----
+ymean <- mean(y)
+sstotal1 <- 0
+t1 <- system.time({
+  for (i in 1:length(y)){
+    sstotal1 <- sstotal1 + (y[i] - ymean)^2
+  }
+})
+#-----method b: vectorize----
+t2 <- system.time({sstotal2 <- sum((y-ymean)^2)})
+time <- data.frame("loop" = as.vector(t1)[1:3], "vectorize" = as.vector(t2)[1:3])
+rownames(time) <- c("user","system","elapsed")
+kable(time, caption = "Computing Time for Two Methods")
+sst <- data.frame("loop" = sstotal1, "vectorize" = sstotal2)
+kable(sst, caption = "SSTotal from Two Methods")
+```   
+
+From the above two tables we can see that the two methods give us the same answer but the vectorization save us a lot of time.  
+
+### Problem 3  
+
+```{r P3}
+set.seed(1256)
+theta <- as.matrix(c(1,2), nrow = 2)
+X <- cbind(1, rep(1:10, 10))
+h <- X %*% theta + rnorm(100, 0, 0.2)
+
+alpha <- 0.01
+tolerance <- 1e-5
+
+theta0 <- 1
+theta1 <- 2
+theta_vec <- c(theta0, theta1)
+
+h_0 <- function(X, theta){
+  hval <- X %*% theta
+  return(hval)
+}
+
+while (TRUE){
+  h_diff <- h_0(X, theta = theta_vec) - h
+  theta0_new <- theta_vec[1] - alpha*mean(h_diff)
+  theta1_new <- theta_vec[2] - alpha*mean(h_diff*X[,2])
+  theta_new <- c(theta0_new, theta1_new)
+  if ((abs(theta0 - theta0_new) < tolerance) | (abs(theta1 - theta1_new) < tolerance)){
+    break
+  }else {
+    theta_vec <- theta_new
+  }
+}
+
+fit <- lm(h~ 0+X)
+coeff_df <- data.frame("lm_method" = coefficients(fit), "gradient_descent" = theta_vec)
+rownames(coeff_df) <- c("beta0", "beta1")
+kable(coeff_df, caption = "Coefficients Under Two Methods")
+```  
+
+In this problem I used the tolerance `r tolerance` and the step size `r alpha`
+
+### Problem 4  
+
+I first write this expression like the following:  
+
+$$(X^{'}X)\hat{\beta} = X^{'}Y $$
+If denothe $A = X^{'}X$, I'd like to do Cholesky decomposition for A:$A = R^{'}R$ where R is upper triangular matrix and then this expression becomes $$R^{'}R\hat{\beta} = X^{'}Y$$.
+Denote $R\hat{\beta} = v$, then I'd like to use forward sovle for $v$ and backward solve for $R\hat{\beta} = v$. Backward and forward solve is algorithms for solving $Ax = b$ where A is triangular matrix and I think it would be relatively more efficency than directly compute inverse.  
+
+
+
+### Problem 5  
+
+#### Part a  
+
+```{r P5}
+set.seed(12456)
+
+G <- matrix(sample(c(0, 0.5, 1), size = 16000, replace = T), ncol = 10)
+R <- cor(G) # R: 10 * 10 correlation matrix of G
+C <- kronecker(R, diag(1600)) # C is a 16000 * 16000 block diagonal matrix
+id <- sample(1:16000, size = 932, replace = F)
+q <- sample(c(0, 0.5, 1), size = 15068, replace = T) # vector of length 15068 
+A <- C[id, -id] # matrix of dimension 932 * 15068
+B <- C[-id, -id] # matrix of dimension 15068 * 15068
+p <- runif(932, 0, 1)
+r <- runif(15068, 0, 1)
+C <- NULL #save some memory space
+# t5.1 <- system.time(y <- p + A %*% solve(B) %*% (q-r))
+```  
+
+The memory A took is `r object.size(A)` and B took is `r object.size(B)`.  
+
+#### Part b  
+
+I first rearrange the formula a little, let:  
+
+$$B^{-1} (q-r) = k$$
+Then I got $Bk = q-r$. Since solve $k$ in this formula would be more efficiency than compute $B^{-1}$, so I would solve $k$ first and then compute $y = p + Ak$.  
+Also B is still a block diagonal matrix which I think will also help to simplify the computation.  
+
+#### Part 3  
+
+```{r P5.3}
+
+#system.time({
+#  y <- p + A %*% solve(B, q-r)
+#})
+
+# cl <- makeCluster(rep("localhost",4), type = "SOCK")
+# clusterCall(cl, chol(B))
+# stopCluster(cl)
+```  
+
+### Appendix: Code  
+
+```{r Appendix, ref.label=c("P2","P3","P5","P5.3"), echo=TRUE, eval=F, tidy=TRUE, include=T}
+  
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
