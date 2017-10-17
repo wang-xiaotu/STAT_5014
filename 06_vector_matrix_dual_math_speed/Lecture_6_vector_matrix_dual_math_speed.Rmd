@@ -218,8 +218,8 @@ A lot of effort has gone into making matrix math faster on computers.  Again, th
 
     A = matrix(rnorm(20*40000, mean=0, sd=5), 20, 40000)
     B = matrix(rnorm(20*40000, mean=0, sd=5), 20, 40000)
-    system.time({t(a)%*%b})
-    system.time({crossprod(a,b)})
+    system.time({t(A)%*%B})
+    system.time({crossprod(A,B)})
 
 ```
 
