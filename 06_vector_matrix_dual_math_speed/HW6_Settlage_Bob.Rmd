@@ -78,7 +78,7 @@ fig <- local({
 
 In this problem, we are to compare traditional for loop style computing of sums of squares (SST) to the same computation using vector operations.  The comparison is in timing and code pretty-ness.  The data using in this problem is generated and included in the following code.
 
-```{r for_loop, echo=T, eval=T}
+```{r for_loop, echo=T, eval=T, include=T}
 
     #generate the data
     set.seed(12345)
@@ -104,7 +104,7 @@ In this problem, we are to compare traditional for loop style computing of sums 
 
 Times for the "for loop" method and the vectorized method are `r print(paste0(t1[[3]]," and ", t2[[3]]))` respectively.  I had initially included the mean(y) inside the square term in the loop function.  This was taking WAY to long, so I precalculated that saving a ton of redundant calculation of $\bar{y}$.
 
-```{r vector_try2, eval=T, echo=T}
+```{r vector_try2, eval=T, echo=T, include=T}
     ##Part b: vector opertations
     SST <- 0
     t3 <- system.time({
@@ -121,7 +121,7 @@ In this problem, we are being asked to code up a gradient descent algorithm, aga
 
 First, the for loop version of gradient descent:
 
-```{r eval=T, echo=T}
+```{r eval=T, echo=T, include=T}
 
     #generate the data
     set.seed(1256)
@@ -162,7 +162,7 @@ First, the for loop version of gradient descent:
     })
 ```
 
-```{r echo=T, eval=T}
+```{r echo=T, eval=T, include=T}
 
     #generate the data
     set.seed(1256)
