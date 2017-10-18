@@ -1,0 +1,242 @@
+---
+title: "Stat 5014 HW6"
+author: "Bob Settlage"
+date: '`r Sys.Date()`'
+output:
+  pdf_document: default
+  fig_caption: yes
+  fig_height: 6
+  fig_width: 7
+  classoption: landscape
+header-includes: \setlength\parindent{24pt} \usepackage{MnSymbol} \usepackage{mathrsfs}
+---
+
+```{r setup, include=FALSE, message=F, warning=F}
+    #initialize and load libraries
+    rm(list = ls())   
+    graphics.off()
+    options(scipen = 4, digits = 6)
+    options(stringsAsFactors = FALSE)
+    knitr::opts_chunk$set(echo = F, eval=T, cache=T, tidy.opts=list(width.cutoff=55),
+                tidy=T, include=FALSE, message=F, warning=F)
+    library.warn <- library
+    library <- function(package, help, pos = 2, lib.loc = NULL, character.only = FALSE,
+                        logical.return = FALSE, warn.conflicts = FALSE, quietly = TRUE,
+                        verbose = getOption("verbose")) {
+       if (!character.only) {
+          package <- as.character(substitute(package))
+       }
+       suppressPackageStartupMessages(library.warn(
+          package, help, pos, lib.loc, character.only = TRUE,
+          logical.return, warn.conflicts, quietly, verbose))}
+    #setwd("~/Google Drive/Projects/....")
+
+    #install.packages("scatterplot3d")
+    #library(scatterplot3d)
+    #install.packages("car")
+    #library(car)
+    #library(doParallel)
+    #setup parallel backend to use 7 processors
+    #no_cores <- detectCores() - 2
+    #cl<-makeCluster(no_cores)
+    #registerDoParallel(cl)
+    #stopCluster(cl)
+    #library(MASS)
+    #library(RColorBrewer)
+    #library(plot3D)
+    #install.packages("tidyverse") ##kinda overkill, only need dplyr and tidyr
+    library(tidyverse)
+    library(beeswarm)
+    library(stargazer)
+    library(data.table)
+    library(lubridate)
+    library(Matrix)
+```
+
+```{r misc_function}
+# A function for captioning and referencing images
+# figure captions are a pain IMO, I don't remember where I got this from but it may be referenced here: 
+##https://rpubs.com/ajlyons/autonumfigs
+
+fig <- local({
+    i <- 0
+    ref <- list()
+    list(
+        cap=function(refName, text) {
+            i <<- i + 1
+            ref[[refName]] <<- i
+            text
+        },
+        ref=function(refName) {
+            ref[[refName]]
+        })
+})
+#cat("\n\n\\pagebreak\n")
+```
+
+##Problem 2: Sums of Squares
+
+In this problem, we are to compare traditional for loop style computing of sums of squares (SST) to the same computation using vector operations.  The comparison is in timing and code pretty-ness.  The data using in this problem is generated and included in the following code.
+
+```{r for_loop, echo=T, eval=T, include=T}
+
+    #generate the data
+    set.seed(12345)
+    y <- seq(from = 1, to = 100, 
+             length.out = 1e+08) + rnorm(1e+08)
+    
+    ##Part a: for loop
+    SST <- 0
+    t1 <- system.time({
+        y_bar <- mean(y)
+        for(i in 1:1e8){
+            SST <- SST + (y[i]-y_bar)^2
+        }
+    })
+    
+    ##Part b: vector operations
+    SST <- 0
+    t2 <- system.time({
+        y_bar <- mean(y)
+        SST <- t(y-y_bar) %*% (y-y_bar)
+    })
+```
+
+Times for the "for loop" method and the vectorized method are `r print(paste0(t1[[3]]," and ", t2[[3]]))` respectively.  I had initially included the mean(y) inside the square term in the loop function.  This was taking WAY to long, so I precalculated that saving a ton of redundant calculation of $\bar{y}$.
+
+```{r vector_try2, eval=T, echo=T, include=T}
+    ##Part b: vector opertations
+    SST <- 0
+    t3 <- system.time({
+        y_star <- (y-mean(y))
+        SST <- crossprod(y_star)
+    })
+```
+
+This one change resulted in a new time for the vectorized method of `r print(t3[[3]])` giving a `r (t2[[3]]-t3[[3]])/t3[[3]]*100`% reduction.
+
+##Problem 3: Dual nature for speed
+
+In this problem, we are being asked to code up a gradient descent algorithm, again using for loop and matrix operations comparing the timings and code cleanliness.
+
+First, the for loop version of gradient descent:
+
+```{r eval=T, echo=T, include=T}
+
+    #generate the data
+    set.seed(1256)
+    theta <- as.matrix(c(1,2), nrow =2)
+    X <- cbind(1, rep(1:10,10))
+    h <- X %*% theta + rnorm(100,0,0.2)
+    
+    theta0_current <- 0
+    theta0_new <- 1
+    theta1_current <- 0
+    theta1_new <- 1
+    alpha <- 0.0001
+    tolerance <- 0.000001
+    m <- length(h)
+    
+    #could probably do better by:
+        #a. do both updates in the same loop OR
+        #b. use the new theta0 in the theta1 loop
+    t4 <- system.time({
+    while(abs(theta0_new-theta0_current)>tolerance & 
+          abs(theta1_new-theta1_current)>tolerance){
+            theta0_current <- theta0_new
+            theta1_current <- theta1_new
+            theta0_grad <- 0
+            for(i in 1:m){
+                theta0_grad <- theta0_grad + theta0_current + 
+                    theta1_current * X[i,2] - h[i]
+            }
+            theta0_new <- theta0_current - alpha/m * theta0_grad
+            theta1_grad <- 0
+            for(i in 1:m){
+                theta1_grad <- theta1_grad + 
+                    theta0_current + (theta1_current * X[i,2] - h[i])*X[i,2]
+            }
+                
+            theta1_new <- theta1_current - alpha/m*theta1_grad
+          }
+    })
+```
+
+```{r echo=T, eval=T, include=T}
+
+    #generate the data
+    set.seed(1256)
+    theta <- as.matrix(c(1,2), nrow =2)
+    X <- cbind(1, rep(1:10,10))
+    h <- X %*% theta + rnorm(100,0,0.2)
+    
+    theta_current <- as.matrix(c(0,0), nrow =2)
+    theta_new <- as.matrix(c(1,1), nrow =2)
+    alpha <- 0.0001
+    tolerance <- 0.000001
+    m <- length(h)
+    
+    tX <- t(X)
+    t5 <- system.time({
+    while(sum(abs(theta_new-theta_current)>tolerance)){
+            theta_current <- theta_new
+            theta_grad <- tX %*% ((X %*% theta_current) - h)
+            theta_new <- theta_current - alpha/m * theta_grad
+    }
+    })
+
+```
+
+In this case, we greatly improved the code readibility.  We did not see an improvement in speed and in fact are a bit slower: `r t5[[3]]` vs `r t4[[3]]` for matrix and for loops respectively.
+
+## Problem 5:
+
+Here the goal is to compute a set of vector/matrix operations quickly.  As a reminder, the operation we are to compute is:
+
+\begin{equation}
+y = p + A B^{-1} (q - r)
+\end{equation}
+
+Without any improvements, a single iteration (i.e. single randomly populated B matrix) takes 10-20 min.  Without going through the optimization strategy, here is the best I came up with:
+
+```{r fast_matrix, echo=T, eval=T, include=T}
+
+    ##################################
+    ##Tian's code to make the matrices
+    set.seed(12456) #not currently doing parallel stuff, so probably don't need parRNG
+    # G: 1600 * 10 matrix, elements can take three values: 0, 0.5 and 1
+    # id: vector of length 932 -- 932 random indexes in G_c (vectorized G)
+    # p: vector of length 932
+    # r: vector of length 15068
+    
+    G <- matrix(sample(c(0,0.5,1),size=16000,replace=T),ncol=10)
+    R <- cor(G) # R: 10 * 10 correlation matrix of G
+    C <- kronecker(R, diag(1600)) # kronecker product, C is a 16000 * 16000 block diagonal matrix
+    #G_c <- as.vector(G) # vectorized G with length of 16000 -- concatenate columns of G
+    id <- sample(1:16000,size=932,replace=F)
+    q <- sample(c(0,0.5,1),size=15068,replace=T) # vector of length 15068
+    A <- C[id, -id] # matrix of dimension 932 * 15068
+    B <- C[-id, -id] # matrix of dimension 15068 * 15068, still a block diagonal matrix, sparse
+    p <- runif(932,0,1)
+    r <- runif(15068,0,1)
+    C<-NULL
+    
+    qr <- q-r # not really part of the compute as updates are to B
+    Bsp<-Matrix(B) #if more than 1/2 entries are zero, cast as sparse = default
+    Asp<-Matrix(A) #probably don't need to do this, but it doesn't hurt
+    t6<-system.time(z4<-p+Asp%*%solve(Bsp, tol = 1e-19)%*%qr)
+
+```
+
+There was a question on the structure of B.  B is a 15068 x 15068 matrix with 1 along the diagonal and 10 x 10 blocks along the diagonal with off diagonal elements as correlation values.  Here is a tabulation of the elements in the matrix.  There should only be 100 different elements, so we can do this. ;)
+
+```{r matrix_elements, echo=T, eval=T, include=T}
+    
+    ## quick view of diagonal elements
+    table(diag(B))
+    ## quick view of all elements
+    table(B)
+    
+```
+
+
