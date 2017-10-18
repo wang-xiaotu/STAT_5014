@@ -3,21 +3,20 @@ title: "Homework6"
 output:
   html_document: default
   html_notebook: default
-
 ---
 
 ```{r setup, include=FALSE, message=F, warning=F}
 library(knitr)
 library(doMC)
 library(parallel)
-library(limSolve)
+library(snow)
 knitr::opts_chunk$set(echo = F, eval=T, cache=T, tidy.opts=list(width.cutoff=55),
                 tidy=T, message=F, warning=F, cache.lazy = FALSE)
 ```
 
 ### Problem 2  
 
-```{r P2}
+```{r}
 set.seed(12345)
 y <- seq(from = 0, to = 100, length.out = 1e+08) + rnorm(1e+08)
 #------method a: loop----
@@ -41,7 +40,7 @@ From the above two tables we can see that the two methods give us the same answe
 
 ### Problem 3  
 
-```{r P3}
+```{r}
 set.seed(1256)
 theta <- as.matrix(c(1,2), nrow = 2)
 X <- cbind(1, rep(1:10, 10))
@@ -93,7 +92,7 @@ Denote $R\hat{\beta} = v$, then I'd like to use forward sovle for $v$ and backwa
 
 #### Part a  
 
-```{r P5}
+```{r}
 set.seed(12456)
 
 G <- matrix(sample(c(0, 0.5, 1), size = 16000, replace = T), ncol = 10)
@@ -121,27 +120,16 @@ Also B is still a block diagonal matrix which I think will also help to simplify
 
 #### Part 3  
 
-```{r P5.3}
+```{r}
 
 #system.time({
 #  y <- p + A %*% solve(B, q-r)
 #})
-system.time({
-  y <- p + A %*% Solve.block(B, B = q-r)
-})
+
 # cl <- makeCluster(rep("localhost",4), type = "SOCK")
 # clusterCall(cl, chol(B))
 # stopCluster(cl)
-```  
-
-### Appendix: Code  
-
-```{r Appendix, ref.label=c("P2","P3","P5","P5.3"), echo=TRUE, eval=F, tidy=TRUE, include=T}
-  
 ```
-
-
-
 
 
 
