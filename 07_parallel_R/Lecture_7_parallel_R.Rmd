@@ -250,6 +250,7 @@ First, the for loop...
 
     library(foreach)
     library(doParallel)
+    registerDoParallel(cores=1)
     system.time({
     tans <- foreach(b = 1:B, .combine='c') %dopar% {
         sum(atan(1:5e6))

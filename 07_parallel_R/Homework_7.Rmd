@@ -13,19 +13,19 @@ output: pdf_document
 
 For each assignment, turn in by the due date/time.  Late assignments must be arranged prior to submission.  In every case, assignments are to be typed neatly using proper English in Markdown.  
 
-This week, we spoke about parallelizing R.  We looked at two methods, parallizing for loops and parallelizing the apply family of functions.  In this homework, we will explore parallelization.  A word of caution, this homework involves parallel functions.  If you try to start a cluster when one is already started, you can easily lock up your computer and have to do a hard boot.  A. Save (commit) you homework often. B. Remember to stop the cluster before starting another!!  C. Figure out how many cores you computer has to play with and back off by 1. IE, mine has 8, I prefer to not exceed cluster sizes of 6 or 7.
+This week, we spoke about parallelizing R.  We looked at two methods, parallizing for loops and parallelizing the apply family of functions.  In this homework, we will explore parallelization.  A word of caution, this homework involves parallel functions.  If you try to start a cluster when one is already started, you can easily lock up your computer and have to do a hard boot.  A. Save (commit) your homework often. B. Remember to stop the cluster before starting another!!  C. Figure out how many cores your computer has to play with and back off by 1. IE, mine has 8, I prefer to not exceed cluster sizes of 6 or 7.
 
 ## Problem 1 (GitHub 2 pts + 2 Style pts)
 
 This week we will change gears a little on GitHub.  Today we start making homework something we can use to highlight our professionalism and abilities.  You will continue to retrieve the lectures and homeworks from my GitHub (anyway you like), but you will:
 
 1. create a new GitHub Repository (online)  
-2. setup an Rproject pointing to this new repository  
-3. invite me as a collaborator (settings --> collaborators)  
-4. create a new R *Notebook* file within the project folder  
+2. invite me as a collaborator (settings --> collaborators)  
+3. setup an Rproject pointing to this new repository  
+4. create a new RNotebook file within the project folder  
 5. save the notebook HW7_lastname_firstname  
 
-Note that this homework will be graded for professionalism as well as your ability to solve the problems.  Remember, reproducibility requires weaving text (appropriate for a reader), code (commented) and necessary output as a compendium for what was done.  
+Note that this homework will be graded for professionalism as well as your ability to solve the problems (passing is $\ge$ 7.  Remember, reproducibility requires weaving text (appropriate for a reader), code (commented) and necessary output as a compendium for what was done.  
 
 ## Problem 2: Sums of Squares (2 pts)
 
@@ -78,7 +78,9 @@ Given $\bold{X}$ and $\vec{h}$ below, implement the above algorithm, parallelizi
 
 ## Problem 4: Bootstrapped regression (2 pts)
 
-The basic procedure is:
+There are situations where you want another realization of the data from a population.  If you have a random sample from a population, you can randomly draw from that sample (with replacement) to produce a new realization of the sample.  If you do this many times calculating some sort of summary statistic for each bootstrapped sample, this is called bootstrapping.
+
+The basic procedure for bootstrapping in the regression setting is:
 
 For b $\in$ {1,$\dots$,B}
 \begin{itemize}
@@ -86,9 +88,11 @@ For b $\in$ {1,$\dots$,B}
     \item Calculate $\hat\beta^{(b)}$  
 \end{itemize}
 
-A. Impliment this algorithm using the data generated below for B=10,000.  
+A. Impliment this algorithm using the data generated below for B=10,000.  Do not use the boot package, use the sample function in base R: sample(x=,size=,replace=T).  
 B. Create a table of the result with the appropriate summary statistics.  
 C. Create histograms of the distribution of $\hat\beta$'s.
+
+Which parallelization method did you use?  What impediments did you encounter?  How long did it take?
 
 ```{r boot_regression_data, eval=F, include=T, echo=T}
     
@@ -104,7 +108,7 @@ C. Create histograms of the distribution of $\hat\beta$'s.
 
 Push your homework to YOUR GitHub.
 
-**This is YOUR GitHub Repository.  Save what you want, there is a limit to how big a repo can be, so be a little sparing on what you put up there. Please save the file you would like me to read as: HW#_lastname_firstname.pdf.  I am not going to go through your Markdown to try to figure out what you were doing.**
+**This is YOUR GitHub Repository.  Save what you want, there is a limit to how big a repo can be, so be a little sparing on what you put up there. Please save the file you would like me to read as: HW#_lastname_firstname.html.  I am not going to go through your Markdown to try to figure out what you were doing.**
 
 ## Optional preperation for next class:  
 Read up on regular expressions.
