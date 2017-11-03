@@ -51,7 +51,7 @@ Push your homework to YOUR GitHub.
 **This is YOUR GitHub Repository.  Save what you want, there is a limit to how big a repo can be, so be a little sparing on what you put up there. Please save the file you would like me to read as: HW#_lastname_firstname.html.  I am not going to go through your Markdown to try to figure out what you were doing.**
 
 ## Optional preperation for next class:  
-Read up on regular expressions.
+Read up on Shiny and Dashboards.
 
 
 

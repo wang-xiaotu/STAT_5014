@@ -1,6 +1,5 @@
 ---
-title: 'Python in RNotebooks'
-subtitle: 'bash/sed/awk as well'
+title: "Python in RNotebooks"
 author: "Bob Settlage"
 date: '`r Sys.Date()`'
 output:
@@ -10,6 +9,7 @@ output:
     fig_width: 4
     smaller: yes
   slidy_presentation: default
+subtitle: bash/sed/awk as well
 ---
 
 ```{r misc_function, eval=T, echo=F, warnings=F}
