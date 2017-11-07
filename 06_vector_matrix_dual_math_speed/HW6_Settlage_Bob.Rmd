@@ -3,11 +3,12 @@ title: "Stat 5014 HW6"
 author: "Bob Settlage"
 date: '`r Sys.Date()`'
 output:
-  pdf_document: default
+  html_document: default
   fig_caption: yes
   fig_height: 6
   fig_width: 7
   classoption: landscape
+  pdf_document: default
 header-includes: \setlength\parindent{24pt} \usepackage{MnSymbol} \usepackage{mathrsfs}
 ---
 
