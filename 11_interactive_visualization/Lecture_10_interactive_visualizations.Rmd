@@ -1,0 +1,78 @@
+---
+title: "Interactive visualizations, Shiny and Dashboards"
+author: "Bob Settlage"
+date: '`r Sys.Date()`'
+output:
+  ioslides_presentation:
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 4
+    smaller: yes
+  slidy_presentation: default
+---
+
+```{r misc_function, eval=T, echo=F, warnings=F}
+
+    rm(list = ls())   
+    graphics.off()
+    options(scipen = 4, digits = 6)
+    options(stringsAsFactors = FALSE)
+    knitr::opts_chunk$set(echo = F, eval=T, cache=T, tidy.opts=list(width.cutoff=53),
+                tidy=T, include=FALSE, message=F, warning=F)
+    library.warn <- library
+    library <- function(package, help, pos = 2, lib.loc = NULL, character.only = FALSE,
+                        logical.return = FALSE, warn.conflicts = FALSE, quietly = TRUE,
+                        verbose = getOption("verbose")) {
+       if (!character.only) {
+          package <- as.character(substitute(package))
+       }
+       suppressPackageStartupMessages(library.warn(
+          package, help, pos, lib.loc, character.only = TRUE,
+          logical.return, warn.conflicts, quietly, verbose))}
+
+```
+
+## Today's Agenda
+
+- Two objectives today
+    + Dashboards
+    + Shiny
+- Homework 10
+
+## Dashboards
+
+Collections of visuals to monitor or display a process are termed "Dashboards".
+
+Dashboards are found in many fields in our daily lives:
+
+1.  CDC - Center for Disease Control, all over on thier website  
+2.  Stock trading platforms  
+3.  The front of your car  
+4.  Casinos  
+5.  Airline control towers  
+
+
+## Examples
+
+<http://rmarkdown.rstudio.com/flexdashboard/examples.html>  
+<https://blog.codecentric.de/en/2017/11/explore-predictive-maintenance-flexdashboard/>  
+<https://i1.wp.com/datascienceplus.com/wp-content/uploads/2017/10/2017-10-30.png?ssl=1>  
+<https://www.r-bloggers.com/playing-with-r-shiny-dashboard-and-google-analytics-data/>  
+<https://www.r-bloggers.com/google-analytics-dashboards-with-r-shiny/>  
+
+## Interaction
+
+Static dashboards are nice, interactive are better, REACTIVE are best.
+
+1.  Static - load, munge, analyze, plot  
+2.  Interactive - user can influence and explore data  
+3.  Reactive - new data flows into the dashboard updates visuals accordingly
+
+## Shiny
+
+<https://shiny.rstudio.com/tutorial/>  
+<https://www.r-bloggers.com/making-a-shiny-dashboard-using-highcharter-analyzing-inflation-rates/?utm_source=feedburner&utm_medium=email&utm_campaign=Feed:+RBloggers+(R+bloggers)>  
+<http://rmarkdown.rstudio.com/flexdashboard/shiny.html>  
+
+
+## Homework 10
