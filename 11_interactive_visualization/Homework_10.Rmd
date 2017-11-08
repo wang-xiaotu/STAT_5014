@@ -1,0 +1,36 @@
+---
+title: "Statistics 5014: Homework 10"
+subtitle: "Due In Class November 15, 9am"
+date: '`r Sys.Date()`'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+    knitr::opts_chunk$set(echo = TRUE)
+    knitr::opts_chunk$set(echo = F, eval=T, cache=T, tidy.opts=list(width.cutoff=55),
+                tidy=T, include=FALSE, message=F, warning=F)
+```
+
+For each assignment, turn in by the due date/time.  Late assignments must be arranged prior to submission.  In every case, assignments are to be typed neatly using proper English in Markdown.  
+
+This week, we spoke about dashboards, shiny and displaying processes.  How do we use this?  We create visuals that do more than make pretty wall art, we distill data into actionable knowledge.  What does this mean?  We combine visuals with statistics to show trends, create alerts, inform ourselves of when an action should be taken.
+
+## Problem 1: Interest statement (3 pt)
+
+By Monday, Nov 13, email me a topic idea for a dashboard.  Make it interesting to you, specific enough to describe what interests you.  Err towards more details.  Include any ideas of the data you have or need to make a good dashboard.  If you don't have data, make sure and include this.
+
+## Problem 2: Storyboard your dashboard (3 pts)
+
+Create a skeleton dashboard.  NO graphics, functionality, etc is necessary.  Just sketch out what the dashboard will look like using flexdashboards.  IE, if you envision a 2 column dashboard, go ahead and create one.  Put text in each column to indicate what you want in each column.  Will this dashboard be static, interactive, dynamic?
+
+## Problem 3: Submit your ideas (4 pts)
+
+Email me a link to your skeleton dashboard.
+
+## Optional preperation for next class:  
+Continue to read up on Shiny and Dashboards.
+
+
+
+
+
