@@ -3,12 +3,12 @@ title: "Python in RNotebooks"
 author: "Bob Settlage"
 date: '`r Sys.Date()`'
 output:
+  slidy_presentation: default
   ioslides_presentation:
     fig_caption: yes
     fig_height: 6
     fig_width: 4
     smaller: yes
-  slidy_presentation: default
 subtitle: bash/sed/awk as well
 ---
 
